@@ -63,7 +63,7 @@ From a technical perspective, you don't need two different folders, but from a p
 </table>
 
 
-## PROC
+## Procedures
 
 Per [documentation](http://support.sas.com/documentation/cdl/en/lrcon/62955/HTML/default/viewer.htm#a000992094.htm) the PROC step consists of a group of SAS statements that call and execute a procedure. It's basically a way to ask SAS to perform some defined action. 
 
@@ -72,6 +72,7 @@ Per [documentation](http://support.sas.com/documentation/cdl/en/lrcon/62955/HTML
 This procedure describes the contents of a dataset and prints the directory of the SAS library. Basically it's a way to know the structure of a dataset.
 
 **Code:**
+
 ```sas
 proc contents data = output.nonsales;
 run;
@@ -83,12 +84,14 @@ run;
 - **`data`**: This is a parameter to indicate SAS where to get the dataset from. It specifies the input dataset.
 - **`run`**: This is the way to indicate SAS that we're done giving instructions so that all the code before it can be executed. 
 
-Which will generate the following output:
-[[https://github.com/mayrop/sas-101/blob/develop/resources/images/proc-contents-01.png|alt=Output for the contents procedure]]
+Which will generate the following output:  
+<img src="https://github.com/mayrop/sas-101/blob/develop/resources/images/proc-contents-01.png" height="200px"/>
 
-
-proc contents DATA=test.mydataset out=mydata (keep= name varnum) noprint VARNUM;
+There are different options that can be set to modify the output of this procedure, for example:
+```
+proc contents data = output.nonsales out=mydata (keep= name varnum) noprint VARNUM;
 run;
+```
 
 data test.mydataset; * this is where it's going to be saved;
     set test.mydataset; * this is where it's read from;
