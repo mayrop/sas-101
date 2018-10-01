@@ -40,7 +40,10 @@ From a technical perspective, you don't need two different folders, but from a p
                 <pre><code>libname _input_ "/home/v0008/sasuser.v94";</code></pre>
             </td>           
             <td>
-                <pre><code>libname _input_ "/courses/dc36fc35ba27fe300";<br>NOTE: Libref _INPUT_ was successfully assigned as follows:<br>Engine: V9<br>Physical Name: /home/v0008/sasuser.v94</code></pre>
+                <pre><code>libname _input_ "/courses/dc36fc35ba27fe300";
+<br>NOTE: Libref _INPUT_ was successfully assigned as follows:
+<br>Engine: V9
+<br>Physical Name: /home/v0008/sasuser.v94</code></pre>
             </td>                       
         </tr>
         <tr>
@@ -51,7 +54,8 @@ From a technical perspective, you don't need two different folders, but from a p
                 <pre><code>libname myinputlibrary "/home/v0008/sasuser.v94";</code></pre>
             </td>           
             <td>
-                <pre><code>libname myinputlibrary "/home/v0008/sasuser.v94";<br><br/>ERROR: myinputlibrary is not a valid SAS name.<br><br/>
+                <pre><code>libname myinputlibrary "/home/v0008/sasuser.v94";
+</br>ERROR: myinputlibrary is not a valid SAS name.<br><br/>
 </br>ERROR: Error in the LIBNAME statement.</code></pre>
             </td>                       
         </tr>       
