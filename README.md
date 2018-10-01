@@ -30,6 +30,16 @@ From a technical perspective, you don't need two different folders, but from a p
 
 ## Examples
 
+<table>
+<tbody><tr><td><pre>
+<code>
+
+x = 
+  foo = 1
+  bar = 2
+</code>
+</pre></td></tr></tbody></table>
+
 |         | Code                                                      | Output in Log                                                                                                                                                                                      |
 |---------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Valid   | <pre>libname _input_ "/home/v0008/sasuser.v94";</pre>        | <pre><code>libname _input_ "/courses/dc36fc35ba27fe300";\ NOTE: Libref _INPUT_ was successfully assigned as follows:<br/>      Engine: V9<br/>      Physical Name: /home/v0008/sasuser.v94</code></pre> |
