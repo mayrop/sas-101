@@ -1,22 +1,30 @@
-%let localPath = "/";
+## Setting libraries
 
-libname test "/courses/myinput";
-libname output "/home/myoutputfolder";
+A library will be a dataset you're going work with. We need to tell SAS the physical location of the datasets you're going to read from.
 
-FILENAME REFFILE '/home/v0008/sasuser.v94/my-sample-dataset.csv';
+```
+libname orion "/courses/myinput";
+libname output "/home/v0008/sasuser.v94/";
+```
 
-PROC IMPORT DATAFILE=REFFILE
-    DBMS=CSV
-    OUT=output.mydataset;
-    GETNAMES=YES;
-RUN;
+Where:
+- **`orion`**: This is just a variable name that points to a folder that we can `read` from. This does not need to be `orion`, it could be some other name like `myinput`.
+- **`output`**: This is just a variable name that points to a folder that we can `write` from.
 
-proc contents data=output.mydataset ;
+From a technical perspective, you don't need two different folders, but from a practical standpoint it's good to separate the folders where your read from and write to so you don't end up overwriting datasets.
+
+### Comments
+* The variable name for the `libname` should have between 1 and 8 chars.
+
+### Documentation
+Visit the [official documentation](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000214133.htm).
+
+```
+proc contents data=output.mydataset;
 run;
+```
 
-/* 
- * Name for the libname should have between 1 and 8 chars
- */
+
 
 | Data Set Name       | OUTPUT.MYDATASET                                      | Observations         | 1000 |
 |---------------------|-------------------------------------------------------|----------------------|------|
@@ -104,3 +112,16 @@ proc means data=output.ages maxdec=2 mean clm;
     class gender;
     var age;
 run;
+
+## Importing Database from CSV to SAS
+```
+filename reffile '/home/v0008/sasuser.v94/my-sample-dataset.csv';
+```
+
+```sas
+proc import databafile=reffile
+    dbms=csv
+    out=output.mydataset;
+    getnames=yes;
+run;
+```
