@@ -1,30 +1,65 @@
-## Setting libraries
+## Libraries
 
-A library will be a dataset you're going work with. We need to tell SAS the physical location of the datasets you're going to read from.
+For SAS, a data library is a set of files (`.sas7bdat`) that are stored in the same physical location of a comptuter. We need to tell SAS the physical location of the datasets you're going to read from.
 
 ```
 libname orion "/courses/myinput";
 libname output "/home/v0008/sasuser.v94/";
 ```
 
-Where:
-- **`orion`**: This is just a variable name that points to a folder that we can `read` from. This does not need to be `orion`, it could be some other name like `myinput`.
+**Where:**
+- **`orion`**: This is just a variable name that will tell sas to point `orion` to a subdirectory inside `/courses/myinput`. `orion` does not actually mean anything, we can use any variable name as long as it complies with the rules below.
 - **`output`**: This is just a variable name that points to a folder that we can `write` from.
 
 From a technical perspective, you don't need two different folders, but from a practical standpoint it's good to separate the folders where your read from and write to so you don't end up overwriting datasets.
 
-### Comments
-* The variable name for the `libname` should have between 1 and 8 chars.
+### Variable names rules for libraries
+* Needs to have between 1 and 8 chars.
+* The variable name needs to begin with a letter or underscore.
+* It should only contain only letters, numbers, or underscores.
+
+### Example of valid library names:
+* `orion`
+* `input1`
+* `input2`
+* `_input_`
+
+### Example of invalid library names:
+* `myinputlibrary` (longer than 8 chars)
+* `2input` (starts with a number)
+
+If you try to set an invalid name to a library, you will get the following error:
+```sas
+ 72         libname _input_222 "/home/v0008/sasuser.v94";
+ ERROR: _input_222 is not a valid SAS name.
+ ERROR: Error in the LIBNAME statement.
+```
+
+If everything goes smoothly, you'll see the following log when setting up a library:
+**Code**:
+```
+libname _input_ "/home/v0008/sasuser.v94";
+```
+
+**Output**:
+```
+ NOTE: Libref _INPUT_ refers to the same physical library as INPUT_.
+ NOTE: Libref _INPUT_ was successfully assigned as follows: 
+       Engine:        V9 
+       Physical Name: /home/v0008/sasuser.v94
+```
 
 ### Documentation
-Visit the [official documentation](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000214133.htm).
+Visit the [official documentation](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000214133.htm) for further documentation and options.
+
+------------------------
+
+## Procedures
 
 ```
 proc contents data=output.mydataset;
 run;
 ```
-
-
 
 | Data Set Name       | OUTPUT.MYDATASET                                      | Observations         | 1000 |
 |---------------------|-------------------------------------------------------|----------------------|------|
