@@ -63,62 +63,29 @@ From a technical perspective, you don't need two different folders, but from a p
 </table>
 
 
-## Procedures
+## PROC
 
-```
-proc contents data=output.mydataset;
+Per [documentation](http://support.sas.com/documentation/cdl/en/lrcon/62955/HTML/default/viewer.htm#a000992094.htm) the PROC step consists of a group of SAS statements that call and execute a procedure. It's basically a way to ask SAS to perform some defined action. 
+
+### Procedure contents
+
+This procedure describes the contents of a dataset and prints the directory of the SAS library. Basically it's a way to know the structure of a dataset.
+
+**Code:**
+```sas
+proc contents data = output.nonsales;
 run;
 ```
 
-| Data Set Name       | OUTPUT.MYDATASET                                      | Observations         | 1000 |
-|---------------------|-------------------------------------------------------|----------------------|------|
-| Member Type         | DATA                                                  | Variables            | 14   |
-| Engine              | V9                                                    | Indexes              | 0    |
-| Created             | 09/29/2018 0:54:26                                    | Observation Length   | 144  |
-| Last Modified       | 09/29/2018 0:54:26                                    | Deleted Observations | 0    |
-| Protection          |                                                       | Compressed           | NO   |
-| Data Set Type       |                                                       | Sorted               | NO   |
-| Label               |                                                       |                      |      |
-| Data Representation | SOLARIS_X86_64, LINUX_X86_64, ALPHA_TRU64, LINUX_IA64 |                      |      |
-| Encoding            | utf-8 Unicode (UTF-8)                                 |                      |      |
+**Where:**
+- **`proc`**: This is just the way to indicate SAS "execute" or "call".
+- **`contents`**: This is a defined SAS statement. For a full list of statements, see the [Base SAS Procedures Guide](https://support.sas.com/documentation/cdl/en/proc/61895/PDF/default/proc.pdf).
+- **`data`**: This is a parameter to indicate SAS where to get the dataset from. It specifies the input dataset.
+- **`run`**: This is the way to indicate SAS that we're done giving instructions so that all the code before it can be executed. 
 
-### Engine/Host Dependent Information
+Which will generate the following output:
+[[https://github.com/mayrop/sas-101/blob/develop/resources/images/proc-contents-01.png|alt=Output for the contents procedure]]
 
-|-----------------------------------|--------------------------------------------|
-| Data Set Page Size                | 131072                                     |
-| Number of Data Set Pages          | 2                                          |
-| First Data Page                   | 1                                          |
-| Max Obs per Page                  | 909                                        |
-| Obs in First Data Page            | 883                                        |
-| Number of Data Set Repairs        | 0                                          |
-| Filename                          | /home/v0008/sasuser.v94/mydataset.sas7bdat |
-| Release Created                   | 9.0401M5                                   |
-| Host Created                      | Linux                                      |
-| Inode Number                      | 26084658                                   |
-| Access Permission                 | rw-r--r--                                  |
-| Owner Name                        | v0008                                      |
-| File Size                         | 384KB                                      |
-| File Size (bytes)                 | 393216                                     |
-
-
-### Alphabetic List of Variables and Attributes
-
-|---------------------------------------------|----------------|------|-----|-----------|-----------|
-| #                                           | Variable       | Type | Len | Format    | Informat  |
-| 2                                           | Country        | Char | 10  | $10.      | $10.      |
-| 3                                           | Item Type      | Char | 15  | $15.      | $15.      |
-| 6                                           | Order Date     | Num  | 8   | MMDDYY10. | MMDDYY10. |
-| 7                                           | Order ID       | Num  | 8   | BEST12.   | BEST32.   |
-| 5                                           | Order Priority | Char | 1   | $1.       | $1.       |
-| 1                                           | Region         | Char | 33  | $33.      | $33.      |
-| 4                                           | Sales Channel  | Char | 7   | $7.       | $7.       |
-| 8                                           | Ship Date      | Num  | 8   | MMDDYY10. | MMDDYY10. |
-| 13                                          | Total Cost     | Num  | 8   | BEST12.   | BEST32.   |
-| 14                                          | Total Profit   | Num  | 8   | BEST12.   | BEST32.   |
-| 12                                          | Total Revenue  | Num  | 8   | BEST12.   | BEST32.   |
-| 11                                          | Unit Cost      | Num  | 8   | BEST12.   | BEST32.   |
-| 10                                          | Unit Price     | Num  | 8   | BEST12.   | BEST32.   |
-| 9                                           | Units Sold     | Num  | 8   | BEST12.   | BEST32.   |
 
 proc contents DATA=test.mydataset out=mydata (keep= name varnum) noprint VARNUM;
 run;
