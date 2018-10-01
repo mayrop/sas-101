@@ -36,18 +36,9 @@ If you try to set an invalid name to a library, you will get the following error
 ```
 
 If everything goes smoothly, you'll see the following log when setting up a library:
-**Code**:
-```
-libname _input_ "/home/v0008/sasuser.v94";
-```
-
-**Output**:
-```
- NOTE: Libref _INPUT_ refers to the same physical library as INPUT_.
- NOTE: Libref _INPUT_ was successfully assigned as follows: 
-       Engine:        V9 
-       Physical Name: /home/v0008/sasuser.v94
-```
+| Code                                               | Output                                                                                                                                                                                   |
+|----------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ``` libname _input_ "/home/v0008/sasuser.v94"; ``` | ```,NOTE: Libref _INPUT_ refers to the same physical library as INPUT_.,NOTE: Libref _INPUT_ was successfully assigned as follows:,Engine:,V9,Physical Name: /home/v0008/sasuser.v94 ``` |
 
 ### Documentation
 Visit the [official documentation](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000214133.htm) for further documentation and options.
