@@ -31,24 +31,61 @@ From a technical perspective, you don't need two different folders, but from a p
 ## Examples
 
 <table>
-<tbody><tr><td><pre>
-<code>
+    <tbody>
+        <tr>
+            <td>
+                <pre>
+                    <code>
+                        Valid
+                    </code>
+                </pre>
+            </td>
+            <td>
+                <pre>
+                    <code>
+                        libname _input_ "/home/v0008/sasuser.v94";
+                    </code>
+                </pre>
+            </td>           
+            <td>
+                <pre>
+                    <code>
+                        libname _input_ "/courses/dc36fc35ba27fe300";
+                        <br>NOTE: Libref _INPUT_ was successfully assigned as follows:
+                        <br>Engine: V9
+                        <br>Physical Name: /home/v0008/sasuser.v94
+                    </code>
+                </pre>
+            </td>                       
+        </tr>
+        <tr>
+            <td>
+                <pre>
+                    <code>
+                        Invalid
+                    </code>
+                </pre>
+            </td>
+            <td>
+                <pre>
+                    <code>
+                        libname myinputlibrary "/home/v0008/sasuser.v94";
+                    </code>
+                </pre>
+            </td>           
+            <td>
+                <pre>
+                    <code>
+                        libname myinputlibrary "/home/v0008/sasuser.v94";
+                        <br>ERROR: myinputlibrary is not a valid SAS name.
+                        <br>ERROR: Error in the LIBNAME statement.
+                    </code>
+                </pre>
+            </td>                       
+        </tr>       
+    </tbody>
+</table>
 
-x = 
-  foo = 1
-  bar = 2
-</code>
-</pre></td></tr></tbody></table>
-
-|         | Code                                                      | Output in Log                                                                                                                                                                                      |
-|---------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Valid   | <pre>libname _input_ "/home/v0008/sasuser.v94";</pre>        | <pre><code>libname _input_ "/courses/dc36fc35ba27fe300";\ NOTE: Libref _INPUT_ was successfully assigned as follows:<br/>      Engine: V9<br/>      Physical Name: /home/v0008/sasuser.v94</code></pre> |
-| Invalid | <pre>libname myinputlibrary "/home/v0008/sasuser.v94";</pre> | <pre><code>libname myinputlibrary "/home/v0008/sasuser.v94";<br/>ERROR: myinputlibrary is not a valid SAS name.<br/>ERROR: Error in the LIBNAME statement.</code></pre>                                                  |
-
-### Documentation
-Visit the [official documentation](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000214133.htm) for further documentation and options.
-
-------------------------
 
 ## Procedures
 
