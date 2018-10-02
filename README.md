@@ -88,47 +88,58 @@ Which will generate the following output:
 <img src="https://github.com/mayrop/sas-101/blob/develop/resources/images/proc-contents-01.png" height="200px"/>
 
 There are different options that can be set to modify the output of this procedure, for example:
-```
+```sas
 proc contents data = output.nonsales out=mydata (keep= name varnum) noprint VARNUM;
 run;
 ```
 
+```sas
 data test.mydataset; * this is where it's going to be saved;
     set test.mydataset; * this is where it's read from;
-    money = money * 1.1; * this is setting a new column (or orverwriting) incrementing it's value by 0.1
+    money = money * 1.1; * this is setting a new column (or orverwriting) incrementing it's value by 0.1;
 run;
+```
 
+```sas
 proc freq data=test.mydataset;
     table country / NOCUM; 
 run;
+```
 
 /* 
  * NOCUM = https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_freq_sect010.htm
  * 
  */
 
+
+```
 proc freq data=test.mydataset;
     where position = "Manager";
     table country * job_title / nopercent norow nocol;
 run;
+```
 
 /* 
  * nopercent = https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_freq_sect010.htm
  * 
  */
 
+```sas
 data output.mynewdataset;
     set test.mydataset; *;
     age = (existing_date - hbd_date) / 365.25;
 run;
+```
 
+```sas
 proc means data=output.ages maxdec=2 mean clm;
     class gender;
     var age;
 run;
+```
 
 ## Importing Database from CSV to SAS
-```
+```sas
 filename reffile '/home/v0008/sasuser.v94/my-sample-dataset.csv';
 ```
 
