@@ -82,6 +82,7 @@ run;
 - **`proc`**: This is just the way to indicate SAS "execute" or "call".
 - **`contents`**: This is a defined SAS statement. For a full list of statements, see the [Base SAS Procedures Guide](https://support.sas.com/documentation/cdl/en/proc/61895/PDF/default/proc.pdf).
 - **`data`**: This is a parameter to indicate SAS where to get the dataset from. It specifies the input dataset.
+- **`output.nonsales`**: This is the library.
 - **`run`**: This is the way to indicate SAS that we're done giving instructions so that all the code before it can be executed. 
 
 Which will generate the following output:  
