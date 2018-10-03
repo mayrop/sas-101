@@ -8,15 +8,17 @@ libname output "/home/v0008/sasuser.v94/";
 ```
 
 **Where:**
+- **`libname`**: It's the instruction for letting SAS know that you're setting a library.
 - **`orion`**: This is just a variable name that will tell sas to point `orion` to a subdirectory inside `/courses/myinput`. `orion` does not actually mean anything, we can use any variable name as long as it complies with the rules below.
 - **`output`**: This is just a variable name that points to a folder that we can `write` from.
+- **`/courses/myinput`**: That's the physical location of the library. Click here if you don't know how to get this value? 
 
 From a technical perspective, you don't need two different folders, but from a practical standpoint it's good to separate the folders where your read from and write to so you don't end up overwriting datasets.
 
 ## Rules for 'nicknames' (variable names) libraries
-* Needs to have between 1 and 8 chars.
-* The variable name needs to begin with a letter or underscore.
-* It should only contain only letters, numbers, or underscores.
+* It needs to have between 1 and 8 chars.
+* It needs to begin with a letter or underscore.
+* It should only contain letters, numbers, or underscores.
 
 ### Example of valid library names:
 * `orion`
@@ -107,10 +109,10 @@ proc freq data=test.mydataset;
 run;
 ```
 
-/* 
+### Other Options
+```
  * NOCUM = https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_freq_sect010.htm
- * 
- */
+```
 
 
 ```
@@ -120,10 +122,11 @@ proc freq data=test.mydataset;
 run;
 ```
 
-/* 
+### Other Options
+```
  * nopercent = https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_freq_sect010.htm
  * 
- */
+```
 
 ```sas
 data output.mynewdataset;
