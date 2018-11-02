@@ -37,6 +37,8 @@ proc import out=outlib.mydataset
 run;
 ```
 
+------------------------
+
 # Data Statements
 ```sas
 data allsales;
@@ -105,14 +107,15 @@ data dataset_example;
 run;
 ```
 
-```
+```sas
 data work.dataset_example;
 	set source.dataset_example;
  	car_name = compress(car_name, "()", "k");
  	car_model = compress(car_model, " ");
- run;
+run;
 ```
-* 
+
+------------------------ 
 
 # proc contents
 ```sas
@@ -128,6 +131,8 @@ run;
 ### Optional
 * `order = varnum` option will display the variables in order, rather than alphabetically
 
+
+------------------------
 
 # proc freq
 ```sas
@@ -164,6 +169,8 @@ Several options can be specified after setting the tables adding `/`, i.e. (`tab
 	* `nopercent` Removes the Percentage
 * Filtering can be done through `where` clause
 
+------------------------
+
 # proc means
 ```sas
 proc means data = mylib.dataset_example;
@@ -178,6 +185,7 @@ proc means data = mylib.dataset_example min max mean clm maxdec = 1;
 run;
 ```
 
+------------------------
 
 # proc format
 ```sas
@@ -213,7 +221,7 @@ proc freq data = mylib.dataset_example;
 run;
 ```
 
-# proc print
+------------------------
 
 # merge
 
@@ -254,6 +262,8 @@ data dataset_example;
 run;
 ```
 
+------------------------
+
 # proc print
 
 ```sas
@@ -276,6 +286,7 @@ proc print data = dataset_example label;
 run;
 ```
 
+------------------------
 
 # proc copy
 ```sas
@@ -287,6 +298,7 @@ run;
 * in (where to copy from)
 * out (where to copy to)
 
+------------------------
 
 # PDFs
 
