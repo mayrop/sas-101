@@ -1,4 +1,4 @@
-### Important Tips
+## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
 `PROC CONTENTS`. However, it's always advised to keep consistency
 * When referrencing a library, you will use `{folder}`.`{dataset}`, 
@@ -7,26 +7,17 @@ where
 via `libname`
     * `dataset` is the name of your dataset.
 
-## Comments in SAS
-Comments are useful to keep your code readable
-```
-*message;
-```
-
-or 
-```
-/* My comment */
-```
 
 ## Importing Libraries
- 
+
+### Referrencing a folder with the .sas7bdat files (datasets)
 ```
 libname mylib "C:\My Code\My Folder";
 ```
 
-## Importing Libraries to SAS format (from other formats - csv, excel, etc.)
-Instructions:
-* Use File -> Import Data. Ensure you save the SAS code, and can read it in and run it
+### Importing from other extensions - csv, excel, etc.
+Instructions:  
+* Use `File -> Import Data`. Ensure you save the SAS code, and can read it in and run it:
 
 ```sas
 proc import out=outlib.mydataset 
@@ -41,24 +32,36 @@ run;
 
 # Data Statements
 ```sas
-data allsales;
-    set australia unitedstates;
+/* 
+The following code will create a new dataset called *dataset_output*
+concatenating the two sources (dataset_source_1 dataset_source_2).
+It will also add a new column score.
+*/
+
+data dataset_output;
+    set dataset_source_1 dataset_source_2;
+
+    set score = grade * 1.1;
 run;
 ```
 
 ```sas
-data dataset_example;
-    set dataset_example(rename = (county = country));
+/* 
+The following code will create a new dataset called *dataset_output*
+from the contents of the dataset dataset_source.
+It will also rename the column countri to country. 
+*/
+data dataset_output;
+    set source.dataset_source(rename = (countri = country));
 run;
 ```
 
 ```sas
-data dataset_example;
-    set dataset_example;
+data dataset_output;
+    set source.dataset_source;
     if student_points < 18.5 and student_points ne . then classroom = 1;
-    else if student_points >= 18.5 and student_points < 25 then classroom = 2;
-    else if student_points >= 25 and student_points < 30 then classroom = 3;
-    else if student_points >= 20 then classroom = 4;
+    else if student_points >= 18.5 then classroom = 2;
+    else classroom = 3;
 run;
 ```
 
@@ -79,7 +82,7 @@ run;
 ```sas
 data dataset_example;
     set dataset_example;
-    format dob dov worddatx.;
+    format date_of_birth worddatx.;
 run;
 ```
 
@@ -310,4 +313,16 @@ proc means data =  mean clm;
     var has_soul;
     where year = 2016;
 run;
+```
+
+
+## Comments in SAS
+Comments are useful to keep your code readable
+```
+*message;
+```
+
+or 
+```
+/* My comment */
 ```
