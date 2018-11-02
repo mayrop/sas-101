@@ -1,3 +1,30 @@
+## Table of contents
+
+<details>
+    <summary><a href="#important-tips">Important Tips</a></summary>
+    <summary><a href="#important-libraries">Important Libraries</a></summary>
+    <ul>
+        <li><a href="#getting-started">Importing your datasets</a></li>
+        <li><a href="#adding-pages">Converting other extensions - csv, excel, etc.</li>
+    </ul>
+    <summary><a href="#important-libraries">Data Statements</a></summary>
+    <ul>
+        <li><a href="#proc-contents">Merging</a></li>
+    </ul>
+    <summary><a href="#important-libraries">Procedures</a></summary>
+    <ul>
+        <li><a href="#proc-contents">proc contents</a></li>
+        <li><a href="#proc-freq">proc freq</a></li>
+        <li><a href="#proc-means">proc means</a></li>
+        <li><a href="#proc-format">proc format</a></li>
+        <li><a href="#proc-print">proc print</a></li>
+        <li><a href="#proc-copy">proc copy</a></li>
+        <li><a href="#proc-sort">proc sort</a></li>
+    </ul>
+    <summary><a href="#important-libraries">Data Statements</a></summary>
+</details>
+
+
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
 `PROC CONTENTS`. However, it's always advised to keep consistency
@@ -10,12 +37,12 @@ via `libname`
 
 ## Importing Libraries
 
-### Referrencing a folder with the .sas7bdat files (datasets)
+### Importing your datasets
 ```
 libname mylib "C:\My Code\My Folder";
 ```
 
-### Importing from other extensions - csv, excel, etc.
+### Converting other extensions - csv, excel, etc.
 Instructions:  
 * Use `File -> Import Data`. Ensure you save the SAS code, and can read it in and run it:
 
@@ -118,9 +145,33 @@ data work.dataset_example;
 run;
 ```
 
------------------------- 
+## Merging Dataset
 
-# proc contents
+For merging datasets, it's **important** that you sort first! Otherwise there will be missing rows from the second dataset. See `proc sort`
+
+```sas
+data dataset_example;
+    merge dataset1 dataset2;
+    by id;
+run;
+```
+
+```sas
+/*
+    The code below will only include rows if they exist in b.
+*/    
+data dataset_example;
+    merge dataset1(in = a) dataset2(in = b);
+    by id;
+    if b;
+run;
+```
+
+
+------------------------ 
+# Procedures
+
+## proc contents
 ```sas
 proc contents data = mylib.dataset_example order = varnum;
 run;
@@ -137,7 +188,7 @@ run;
 
 ------------------------
 
-# proc freq
+## proc freq
 ```sas
 proc freq data = mylib.dataset_example;
     table gender / nocum nopercent;
@@ -174,7 +225,7 @@ Several options can be specified after setting the tables adding `/`, i.e. (`tab
 
 ------------------------
 
-# proc means
+## proc means
 ```sas
 proc means data = mylib.dataset_example;
     var age;
@@ -190,7 +241,7 @@ run;
 
 ------------------------
 
-# proc format
+## proc format
 ```sas
 proc format;
     value rating 1 = 'Very Good'
@@ -226,48 +277,7 @@ run;
 
 ------------------------
 
-# Merge
-
-```
-data dataset_example;
-    merge dataset1 dataset2;
-    by id;
-run;
-```
-
-* *Important* You need to sort first!
-
-```sas
-proc sort data = dataset1;
-    by id;
-run;
-```
-
-```sas
-proc sort data = dataset2;
-    by id;
-run;
-```
-
-```sas
-data dataset_example;
-    merge dataset1 dataset2;
-    by id;
-run;
-```
-
-The code below will only include rows if they exist in b.
-```sas
-data dataset_example;
-    merge dataset1(in = a) dataset2(in = b);
-    by id;
-    if b;
-run;
-```
-
-------------------------
-
-# proc print
+## proc print
 
 ```sas
 options nocenter;
@@ -291,7 +301,7 @@ run;
 
 ------------------------
 
-# proc copy
+## proc copy
 ```sas
 proc copy in=work out=mylib;
     select nonsales;
@@ -303,7 +313,24 @@ run;
 
 ------------------------
 
-# PDFs
+## proc sort
+```sas
+proc sort data = dataset1;
+    by id;
+run;
+```
+
+```sas
+proc sort data = dataset2;
+    by id;
+run;
+```
+
+------------------------
+
+# Out put
+
+## PDFs
 
 ```sas
 ods pdf file = "filepath / fileName.pdf" style = OCEAN
@@ -315,6 +342,9 @@ proc means data =  mean clm;
 run;
 ```
 
+------------------------
+
+# Extra
 
 ## Comments in SAS
 Comments are useful to keep your code readable
