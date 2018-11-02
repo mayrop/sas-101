@@ -48,7 +48,7 @@ proc import out=outlib.mydataset
 run;
 ```
 
-For further details about libraries, click here.
+For further details about libraries, [click here](libname.md).
 
 ------------------------
 
@@ -325,12 +325,12 @@ run;
 ## PDFs
 
 ```sas
-ods pdf file = "filepath / fileName.pdf" style = OCEAN
+ods pdf file = "filepath/filename.pdf" style = OCEAN
 
 proc means data =  mean clm;
-    class building;
-    var has_soul;
-    where year = 2016;
+    class country;
+    var sex;
+    where year = 2018;
 run;
 ```
 
@@ -348,19 +348,3 @@ or
 ```
 /* My comment */
 ```
-
-```sas
-data output.mynewdataset;
-    set test.mydataset; *;
-    age = (existing_date - hbd_date) / 365.25;
-run;
-```
-
-```sas
-proc means data=output.ages maxdec=2 mean clm;
-    class gender;
-    var age;
-run;
-```
-
-
