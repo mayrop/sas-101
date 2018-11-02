@@ -3,9 +3,9 @@
 `PROC CONTENTS`. However, it's always advised to keep consistency
 * When referrencing a library, you will use `{folder}`.`{dataset}`, 
 where
-	* `{folder}` is the name you specified when you imported the library
+    * `{folder}` is the name you specified when you imported the library
 via `libname`
-	* `dataset` is the name of your dataset.
+    * `dataset` is the name of your dataset.
 
 ## Comments in SAS
 Comments are useful to keep your code readable
@@ -31,7 +31,7 @@ Instructions:
 ```sas
 proc import out=outlib.mydataset 
         datafile="C:\My Code\My Folder\example.csv" 
-		dbms=csv replace;
+        dbms=csv replace;
     getnames=yes;
     datarow=2; 
 run;
@@ -42,76 +42,76 @@ run;
 # Data Statements
 ```sas
 data allsales;
-	set australia unitedstates;
+    set australia unitedstates;
 run;
 ```
 
 ```sas
 data dataset_example;
-	set dataset_example(rename = (county = country));
+    set dataset_example(rename = (county = country));
 run;
 ```
 
 ```sas
 data dataset_example;
-	set dataset_example;
-	if student_points < 18.5 and student_points ne . then classroom = 1;
-	else if student_points >= 18.5 and student_points < 25 then classroom = 2;
-	else if student_points >= 25 and student_points < 30 then classroom = 3;
-	else if student_points >= 20 then classroom = 4;
+    set dataset_example;
+    if student_points < 18.5 and student_points ne . then classroom = 1;
+    else if student_points >= 18.5 and student_points < 25 then classroom = 2;
+    else if student_points >= 25 and student_points < 30 then classroom = 3;
+    else if student_points >= 20 then classroom = 4;
 run;
 ```
 
 ```sas
 data dataset_example;
-	set dataset_example;
-	drop student_points;
+    set dataset_example;
+    drop student_points;
 run;
 ```
 
 ```sas
 data dataset_example;
-	set dataset_example;
-	date_of_birth = mdy(date_of_birth_month, date_of_birth_day, date_of_birth_year);
+    set dataset_example;
+    date_of_birth = mdy(date_of_birth_month, date_of_birth_day, date_of_birth_year);
 run;
 ```
 
 ```sas
 data dataset_example;
-	set dataset_example;
-	format dob dov worddatx.;
+    set dataset_example;
+    format dob dov worddatx.;
 run;
 ```
 
 ```sas
 data dataset_example;
-	set dataset_example;
-	if is_married ne "yes" then is_married = 'no';
+    set dataset_example;
+    if is_married ne "yes" then is_married = 'no';
 run;
 ```
 
 ```sas
 data dataset_example;
-	set source.dataset_example;
-	name = catx(' ', first_name, last_name);
-	
-	if points > 100 then do;
-		winner = 'Yes';
-		money = money * 0.9;
-	end;
-	else winner = 'No';
-	
-	where upcase(scan(city, 1, ' ')) = 'BOSTON';
-	
-	format money dollar10.;
+    set source.dataset_example;
+    name = catx(' ', first_name, last_name);
+    
+    if points > 100 then do;
+        winner = 'Yes';
+        money = money * 0.9;
+    end;
+    else winner = 'No';
+    
+    where upcase(scan(city, 1, ' ')) = 'BOSTON';
+    
+    format money dollar10.;
 run;
 ```
 
 ```sas
 data work.dataset_example;
-	set source.dataset_example;
- 	car_name = compress(car_name, "()", "k");
- 	car_model = compress(car_model, " ");
+    set source.dataset_example;
+     car_name = compress(car_name, "()", "k");
+     car_model = compress(car_model, " ");
 run;
 ```
 
@@ -137,22 +137,22 @@ run;
 # proc freq
 ```sas
 proc freq data = mylib.dataset_example;
-	table gender / nocum nopercent;
+    table gender / nocum nopercent;
 run;
 ```
 
 ```sas
 proc freq data = mylib.dataset_example;
-	table gender * country;
+    table gender * country;
 run;
 ```
 
 ```sas
 ods noproctitle;
 proc freq data = mylib.dataset_example;
- 	title "Example table";
-	table gender;
-	where country = "MX";
+     title "Example table";
+    table gender;
+    where country = "MX";
 run;
 ```
 
@@ -165,8 +165,8 @@ run;
 ### Optional
 * Supressing Information
 Several options can be specified after setting the tables adding `/`, i.e. (`table gender / nocum nopercent`)
-	* `nocum` Removes the Cumulative Frequency / Percentage
-	* `nopercent` Removes the Percentage
+    * `nocum` Removes the Cumulative Frequency / Percentage
+    * `nopercent` Removes the Percentage
 * Filtering can be done through `where` clause
 
 ------------------------
@@ -174,14 +174,14 @@ Several options can be specified after setting the tables adding `/`, i.e. (`tab
 # proc means
 ```sas
 proc means data = mylib.dataset_example;
-	var age;
+    var age;
 run;
 ```
 
 ```sas
 proc means data = mylib.dataset_example min max mean clm maxdec = 1;
-	class gender;
-	var age;
+    class gender;
+    var age;
 run;
 ```
 
@@ -190,45 +190,45 @@ run;
 # proc format
 ```sas
 proc format;
-	value rating 1 = 'Very Good'
-		2 = 'Good'
-		3 = 'Neutral'
-		4 = 'Bad';
+    value rating 1 = 'Very Good'
+        2 = 'Good'
+        3 = 'Neutral'
+        4 = 'Bad';
 run;
 ```
 
 ```sas
 proc freq data = mylib.dataset_example;
-	table overall_rating;
-	format overall_rating rating.;
+    table overall_rating;
+    format overall_rating rating.;
 run;
 ```
 
 ```sas
 proc format;
-	value $shape_format 
-		"circle" = "Circle"
-		"CIRCLE" = "Circle"
-		"rectangle" = "Rectangle"
-		"RECTANGLE" = "Rectangle";
+    value $shape_format 
+        "circle" = "Circle"
+        "CIRCLE" = "Circle"
+        "rectangle" = "Rectangle"
+        "RECTANGLE" = "Rectangle";
 run;
 ```
 
 ```sas
 proc freq data = mylib.dataset_example;
-	table shape;
-	format shape $shape_format.;
+    table shape;
+    format shape $shape_format.;
 run;
 ```
 
 ------------------------
 
-# merge
+# Merge
 
 ```
 data dataset_example;
-	merge dataset1 dataset2;
-	by id;
+    merge dataset1 dataset2;
+    by id;
 run;
 ```
 
@@ -236,29 +236,29 @@ run;
 
 ```sas
 proc sort data = dataset1;
-	by id;
+    by id;
 run;
 ```
 
 ```sas
 proc sort data = dataset2;
-	by id;
+    by id;
 run;
 ```
 
 ```sas
 data dataset_example;
-	merge dataset1 dataset2;
-	by id;
+    merge dataset1 dataset2;
+    by id;
 run;
 ```
 
 The code below will only include rows if they exist in b.
 ```sas
 data dataset_example;
-	merge dataset1(in = a) dataset2(in = b);
-	by id;
-	if b;
+    merge dataset1(in = a) dataset2(in = b);
+    by id;
+    if b;
 run;
 ```
 
@@ -269,20 +269,20 @@ run;
 ```sas
 options nocenter;
 proc print data = dataset_example label;
-	var student_id name graduation_date savings;
+    var student_id name graduation_date savings;
 
-	format savings dollar10. graduation_date date9.;
-	title "My first title";
-	title2 "My second title";
-	footnote1 "Leave a footnote 1";
-	footnote2 "Leave a footnote 2";
+    format savings dollar10. graduation_date date9.;
+    title "My first title";
+    title2 "My second title";
+    footnote1 "Leave a footnote 1";
+    footnote2 "Leave a footnote 2";
 
-	label student_id = "Student ID" 
-		name = "Full Name"
-		graduation_date = "Graduation Date" 
-		savings = "Savings";
+    label student_id = "Student ID" 
+        name = "Full Name"
+        graduation_date = "Graduation Date" 
+        savings = "Savings";
 
-	where graduation_date ge '01Feb2000'd and graduation_date le '30Nov2010'd;
+    where graduation_date ge '01Feb2000'd and graduation_date le '30Nov2010'd;
 run;
 ```
 
@@ -291,7 +291,7 @@ run;
 # proc copy
 ```sas
 proc copy in=work out=mylib;
-	select nonsales;
+    select nonsales;
 run;
 ```
 
@@ -306,8 +306,8 @@ run;
 ods pdf file = "filepath / fileName.pdf" style = OCEAN
 
 proc means data =  mean clm;
-	class building;
-	var has_soul;
-	where year = 2016;
+    class building;
+    var has_soul;
+    where year = 2016;
 run;
 ```
