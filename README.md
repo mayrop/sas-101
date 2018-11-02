@@ -81,62 +81,41 @@ run;
 ```sas
 data dataset_output;
     set source.dataset_source;
+
+    /* The code below will concatenate two columns */
+    name = catx(' ', first_name, last_name);
+
+    /* The code below will set the column classroom */
     if student_points < 18.5 and student_points ne . then classroom = 1;
     else if student_points >= 18.5 then classroom = 2;
     else classroom = 3;
-run;
-```
 
-```sas
-data dataset_example;
-    set dataset_example;
-    drop student_points;
-run;
-```
-
-```sas
-data dataset_example;
-    set dataset_example;
-    date_of_birth = mdy(date_of_birth_month, date_of_birth_day, date_of_birth_year);
-run;
-```
-
-```sas
-data dataset_example;
-    set dataset_example;
-    format date_of_birth worddatx.;
-run;
-```
-
-```sas
-data dataset_example;
-    set dataset_example;
+    /* The code below will set the column is_married */
     if is_married ne "yes" then is_married = 'no';
-run;
-```
 
-```sas
-data dataset_example;
-    set source.dataset_example;
-    name = catx(' ', first_name, last_name);
-    
+    /* The code below will set the column winner and also change money */
     if points > 100 then do;
         winner = 'Yes';
         money = money * 0.9;
     end;
     else winner = 'No';
-    
-    where upcase(scan(city, 1, ' ')) = 'BOSTON';
-    
-    format money dollar10.;
-run;
-```
 
-```sas
-data work.dataset_example;
-    set source.dataset_example;
+    /* Change car_name to only keep () in the column */
     car_name = compress(car_name, "()", "k");
+
+    /* Change car_model to remove all spaces */
     car_model = compress(car_model, " ");
+
+    /* Adding a new column of type date */
+    date_of_birth = mdy(date_of_birth_month, date_of_birth_day, date_of_birth_year);
+
+    format date_of_birth worddatx.;
+    format money dollar10.;
+
+    /* The code below will filter the dataset so only rows where first word in city = boston are retrieved */
+    where upcase(scan(city, 1, ' ')) = 'BOSTON';
+
+    drop student_temp_score;
 run;
 ```
 
