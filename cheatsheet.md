@@ -1,28 +1,19 @@
 ## Table of contents
 
-<details>
-    <summary><a href="#important-tips">Important Tips</a></summary>
-    <summary><a href="#important-libraries">Important Libraries</a></summary>
-    <ul>
-        <li><a href="#getting-started">Importing your datasets</a></li>
-        <li><a href="#adding-pages">Converting other extensions - csv, excel, etc.</li>
-    </ul>
-    <summary><a href="#important-libraries">Data Statements</a></summary>
-    <ul>
-        <li><a href="#proc-contents">Merging</a></li>
-    </ul>
-    <summary><a href="#important-libraries">Procedures</a></summary>
-    <ul>
-        <li><a href="#proc-contents">proc contents</a></li>
-        <li><a href="#proc-freq">proc freq</a></li>
-        <li><a href="#proc-means">proc means</a></li>
-        <li><a href="#proc-format">proc format</a></li>
-        <li><a href="#proc-print">proc print</a></li>
-        <li><a href="#proc-copy">proc copy</a></li>
-        <li><a href="#proc-sort">proc sort</a></li>
-    </ul>
-    <summary><a href="#important-libraries">Data Statements</a></summary>
-</details>
+* [Important Tips](#important-tips)
+* [Importing Libraries](#importing-libraries)
+    * [Importing your datasets](#importing-your-datasets)
+    * [Other Extensions (CSV, XLS...)](#converting-other-extensions---csv-excel-etc)
+* [Data Statements](#data-statements)
+    * [Merging](#merging)
+* [Procedures](#procedures)
+    * [proc contents](#proc-contents)
+    * [proc freq](#proc-freq)
+    * [proc means](#proc-means)
+    * [proc format](#proc-format)
+    * [proc print](#proc-print)
+    * [proc copy](#proc-copy)
+    * [proc sort](#proc-sort)
 
 
 ## Important Tips
