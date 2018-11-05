@@ -324,6 +324,14 @@ run;
 
 ## PDFs
 
+### Syntax
+```sas
+    ods pdf <option(s)>;
+    ...procedure name...
+    ods pdf close;
+```
+
+### Example
 ```sas
 ods pdf file = "filepath/filename.pdf" style = OCEAN
 
@@ -332,6 +340,8 @@ proc means data =  mean clm;
     var sex;
     where year = 2018;
 run;
+
+ods pdf close;
 ```
 
 ------------------------
