@@ -14,7 +14,7 @@
     * [proc print](#proc-print)
     * [proc copy](#proc-copy)
     * [proc sort](#proc-sort)
-
+# [Macros](#macros)
 
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
@@ -340,10 +340,12 @@ run;
 ```sas
 %macro print_smokers(smoker, gender=male);
     proc print data=students;
-    where is_smoker=&smoker and ;
+        where is_smoker=&smoker and gender=&gender;
+    run;
 %mend;
+
+%print_smokers(smoker=Yes, gender=female);
 ```
-%print_smokers(smoker="Yes", gender=female);
 
 ------------------------
 
