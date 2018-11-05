@@ -14,7 +14,7 @@
     * [proc print](#proc-print)
     * [proc copy](#proc-copy)
     * [proc sort](#proc-sort)
-# [Macros](#macros)
+* [Macros](#macros)
 
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
