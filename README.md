@@ -326,9 +326,9 @@ run;
 
 ### Syntax
 ```sas
-    ods pdf <option(s)>;
-    ...procedure name...
-    ods pdf close;
+ods pdf <option(s)>;
+...procedure name...
+ods pdf close;
 ```
 
 ### Example
