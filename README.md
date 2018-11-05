@@ -86,8 +86,8 @@ data dataset_output;
     name = catx(' ', first_name, last_name);
 
     /* The code below will set the column classroom */
-    if student_points < 18.5 and student_points ne . then classroom = 1;
-    else if student_points >= 18.5 then classroom = 2;
+    if student_points < 10 and student_points ne . then classroom = 1;
+    else if student_points >= 10 then classroom = 2;
     else classroom = 3;
 
     /* The code below will set the column is_married */
@@ -100,8 +100,8 @@ data dataset_output;
     end;
     else winner = 'No';
 
-    /* Change car_name to only keep () in the column */
-    car_name = compress(car_name, "()", "k");
+    /* Change car_name to only keep [] in the column */
+    car_name = compress(car_name, "[]", "k");
 
     /* Change car_model to remove all spaces */
     car_model = compress(car_model, " ");
@@ -333,6 +333,17 @@ proc means data =  mean clm;
     where year = 2018;
 run;
 ```
+
+------------------------
+
+# Macros
+```sas
+%macro print_smokers(smoker, gender=male);
+    proc print data=students;
+    where is_smoker=&smoker and ;
+%mend;
+```
+%print_smokers(smoker="Yes", gender=female);
 
 ------------------------
 
