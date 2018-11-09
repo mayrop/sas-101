@@ -57,13 +57,13 @@ For further details about libraries, [click here](libname.md).
 /* 
     The following code will create a new dataset called *dataset_output*
     concatenating the two sources (dataset_source_1 dataset_source_2).
-    It will also add a new column score.
+    It will also add a new column monthly_sales.
 */
 
 data dataset_output;
     set dataset_source_1 dataset_source_2;
 
-    set score = grade * 1.1;
+    monthly_sales = daily_sales * 1.1;
 run;
 ```
 
@@ -187,7 +187,7 @@ run;
 
 ```sas
 proc freq data = mylib.dataset_example;
-    table gender * country;
+    table gender * location;
 run;
 ```
 
@@ -196,7 +196,7 @@ ods noproctitle;
 proc freq data = mylib.dataset_example;
     title "Example table";
     table gender;
-    where country = "MX";
+    where location = "MX";
 run;
 ```
 
@@ -333,7 +333,7 @@ ods pdf close;
 
 ### Example
 ```sas
-ods pdf file = "filepath/filename.pdf" style = OCEAN
+ods pdf file = "filepath/filename.pdf"
 
 proc means data =  mean clm;
     class country;
