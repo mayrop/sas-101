@@ -115,6 +115,9 @@ data dataset_output;
     /* The code below will filter the dataset so only rows where first word in city = boston are retrieved */
     where upcase(scan(city, 1, ' ')) = 'BOSTON';
 
+    /* The code below will convert state to uppercase */
+    state = upcase(state);
+
     drop student_temp_score;
 run;
 ```
