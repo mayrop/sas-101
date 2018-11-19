@@ -43,3 +43,27 @@ data example_dsn2;
 	keep id dobd dobm doby dob age;
 run;
 ```
+
+```sas
+data example_dsn2;
+	set example_dsn1;
+	if id = 24 then dobd = 30;
+	dob = mdy(dobm, dobd, doby);
+	date = '12Oct2018'd;
+	age = (date - dob)/365.25;
+	format dob date9.;
+	keep id dobd dobm doby dob date age;
+run;
+```
+
+A slightly more complex example with labels:
+``sas
+data example_dsn2;
+	set example_dsn1;
+	age = '12Oct2018'd - mdy(dobm, dobd, doby);
+	if id = 24 then age = '12Oct2018'd - mdy(9, 30, 1963);
+	age = age/365.25;
+	label age = "Age (years)" dobd = "Date of birth (day)";
+	keep id dobd dobm doby age;
+run;
+``
