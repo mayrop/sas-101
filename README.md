@@ -199,11 +199,11 @@ run;
 ## Data Types
 Variables in SAS can be of 2 types:
 * Numeric
-- NAs are shown as ``.``
-- Right-justified by default
+	- NAs are shown as ``.``
+	- Right-justified by default
 * Character
-- NAs are shown as a blank cell
-- Left-justified by default
+	- NAs are shown as a blank cell
+	- Left-justified by default
 
 To find out the data type of a variable:
 - The above-mentioned defaults can be used to deduce whether one variable is a character string or numeric.
