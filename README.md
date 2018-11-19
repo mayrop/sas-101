@@ -69,6 +69,24 @@ run;
 ```
 
 ```sas
+/*
+	The following code will delete all the variables from orion.nonsales but salary and hire_date.
+*/
+data nonsales2;
+	set orion.nonsales;
+	keep salary hire_date;
+run;
+
+/*
+	The following code will delete salary and hire_date from orion.nonsales.
+*/
+data nonsales2;
+	set orion.nonsales;
+	drop salary hire_date birth_date;
+run;
+
+
+
 /* 
     The following code will create a new dataset called *dataset_output*
     from the contents of the dataset dataset_source.
@@ -122,7 +140,57 @@ data dataset_output;
     drop student_temp_score;
 run;
 ```
+## Using Operators
+The following are the operators:
 
+| Symbol | Definition |
+|--------|--------------------------|
+| + | Add |
+| - | Subtract |
+| * | Multiply |
+| / | Divide |
+| ** | Power |
+| sqrt() | Square root |
+| & and | AND |
+| | or | OR |
+| ^ not | NOT |
+| = eq | equal |
+| ^= ne | not equal |
+| > gt | greater |
+| >= ge | greater than or equal to |
+| < lt | less than |
+| <= le | less than or equal to |
+| in |  |
+| not in |  |
+
+We can use them in conjuction with an IF statement.
+
+## IF statements
+
+We can use the syntax if... then
+``
+data x;
+set x;
+if bmi < 18.5 and bmi ne . then wt_status = 1;
+else if bmi >= 30 then wt_status = 4;
+run;
+``
+
+or we can use the syntax if... then do; a; b; end; .
+
+```
+data example_dsn1;
+	set example_dsn1;
+	if bmi < 18.5 and bmi ne . then do; 
+	wt_status = 1;
+	wt_cat = "Underweight";
+	end;
+run;
+```
+Note that we are filtering out the NAs as SAS considers them a really small number.
+
+A common error is:
+forgetting to close an if then do with an ***end***.
 
 ## Merging Dataset
 
