@@ -57,7 +57,7 @@ run;
 ```
 
 A slightly more complex example with labels:
-``sas
+```sas
 data example_dsn2;
 	set example_dsn1;
 	age = '12Oct2018'd - mdy(dobm, dobd, doby);
@@ -66,4 +66,4 @@ data example_dsn2;
 	label age = "Age (years)" dobd = "Date of birth (day)";
 	keep id dobd dobm doby age;
 run;
-``
+```
