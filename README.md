@@ -29,9 +29,6 @@
 - [Extra](#extra)
   * [Comments in SAS](#comments-in-sas)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
-
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
 `PROC CONTENTS`. However, it's always advised to keep consistency
