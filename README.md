@@ -521,6 +521,24 @@ proc means data = orion.sales mean std median q1 q3;
 run; 
 
 ``
+
+## Labels
+Labels change the appearance of variable names (but __do not__ rename them), as opposed to formats which change the appearance of variable values.
+
+To use them:
+<pre>
+proc print data=orion.sales <b>label</b>;
+   var Employee_ID First_Name Last_Name Salary;
+   <b>label Employee_ID="Sales ID" 
+         First_Name="First Name"
+         Last_Name="Last Name" 
+         Salary="Annual Salary";</b>
+   format Salary dollar8.;
+   where Salary > 80000;   
+   by Country;
+run;
+</pre>
+
 ------------------------
 
 ## proc copy
@@ -585,6 +603,67 @@ ods pdf close;
 %mend;
 
 %print_smokers(smoker=Yes, gender=female);
+```
+
+------------------------
+# ODS
+
+**Output to listing:**
+```sas
+ods listing;
+
+title "This is listing output";
+proc means data = example_dsn1;
+	var height;
+run;
+
+ods listing close;
+```
+
+**Output to PDF:**
+```
+ods pdf file="C:\Users\bmd12s\file.pdf";
+
+title "Sending output to PDF";
+
+proc means data = example_dsn1;
+	var height;
+run;
+
+ods pdf close;
+
+```
+If we want no title for the procedures:
+```
+ods noproctitle;     
+
+ods pdf file="C:\Users\bmd12s\file.pdf";
+title "Sending output to PDF";
+
+proc means data = example_dsn1;
+	var height;
+run;
+
+ods pdf close;
+
+```
+
+``ods pdf file="file.pdf" STYLE=monochromeprinter;`` will use a nice style for the pace.
+
+``ods pdf file="file.pdf" style = monochromeprinter;
+title1 height=12PT j=LEFT f=ARIAL "Sending to PDF";`` will left-justify.
+
+**Output to Word (RTF):**
+```
+ods rtf file="C:\Users\bmd12s\procprint_example.doc";
+
+title "Sending output to RTF";
+
+proc means data = example_dsn1;
+	var height;
+run;
+
+ods rtf close;
 ```
 
 ------------------------
