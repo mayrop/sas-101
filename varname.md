@@ -4,14 +4,14 @@
 * It cannot start with a number
 * It cannot contain full stops or else SAS will go look for it in a certain library
 * It needs to begin with an English letter or underscore.
-* It should **only** contain letters, numbers, or underscores. (no spaces or other symbols)
+* It should ***only*** contain letters, numbers, or underscores. (no spaces or other symbols)
 * The maximum length is 32 characters.
 
 ### Example of __valid__ variable names:
 * ``VAR1``
 * ``Var1``
 * ``December_2007``
-*`` _count_ ``
+* `` _count_ ``
 
 ### Example of __invalid__ variable names:
 * ``DateDD/MM/YY``
