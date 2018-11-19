@@ -12,7 +12,7 @@
     + [Appending](#appending)
   * [Outputting subsets](#outputting-subsets)
 - [Variables](#variables)
-  * [Variable Names](#variable-names))
+  * [Variable Names](#variable-names)
   * [Renaming variables](#renaming-variables)
   * [Data Types](#data-types)
 - [Procedures](#procedures)
