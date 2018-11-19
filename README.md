@@ -1,21 +1,38 @@
 ## Table of contents
 
-* [Important Tips](#important-tips)
-* [Importing Libraries](#importing-libraries)
-    * [Importing your datasets](#importing-your-datasets)
-    * [Other Extensions (CSV, XLS...)](#converting-other-extensions---csv-excel-etc)
-* [Data Statements](#data-statements)
-    * [Merging](#merging)
-* [Variables](#variables)
-* [Procedures](#procedures)
-    * [proc contents](#proc-contents)
-    * [proc freq](#proc-freq)
-    * [proc means](#proc-means)
-    * [proc format](#proc-format)
-    * [proc print](#proc-print)
-    * [proc copy](#proc-copy)
-    * [proc sort](#proc-sort)
-* [Macros](#macros)
+  * [Important Tips](#important-tips)
+  * [Importing Libraries](#importing-libraries)
+    + [Importing your datasets](#importing-your-datasets)
+    + [Converting other extensions - csv, excel, etc.](#converting-other-extensions---csv--excel--etc)
+- [Data Statements](#data-statements)
+  * [Using Operators](#using-operators)
+  * [IF statements](#if-statements)
+  * [Merging Datasets](#merging-datasets)
+    + [Merge](#merge)
+    + [Appending](#appending)
+  * [Outputting subsets](#outputting-subsets)
+- [Variables](#variables)
+  * [Variable Names](#variable-names))
+  * [Renaming variables](#renaming-variables)
+  * [Data Types](#data-types)
+- [Procedures](#procedures)
+  * [proc contents](#proc-contents)
+  * [proc freq](#proc-freq)
+  * [proc means](#proc-means)
+  * [proc format](#proc-format)
+  * [proc print](#proc-print)
+  * [Labels](#labels)
+  * [proc copy](#proc-copy)
+  * [proc sort](#proc-sort)
+- [Out put](#out-put)
+  * [PDFs](#pdfs)
+- [Macros](#macros)
+- [ODS](#ods)
+- [Extra](#extra)
+  * [Comments in SAS](#comments-in-sas)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
@@ -565,33 +582,6 @@ proc sort data = dataset2;
     by id;
 run;
 ```
-
-------------------------
-
-# Out put
-
-## PDFs
-
-### Syntax
-```sas
-ods pdf <option(s)>;
-...procedure name...
-ods pdf close;
-```
-
-### Example
-```sas
-ods pdf file = "filepath/filename.pdf"
-
-proc means data =  mean clm;
-    class country;
-    var sex;
-    where year = 2018;
-run;
-
-ods pdf close;
-```
-
 ------------------------
 
 # Macros
@@ -607,6 +597,13 @@ ods pdf close;
 
 ------------------------
 # ODS
+
+**Syntax**
+```sas
+ods pdf <option(s)>;
+...procedure name...
+ods pdf close;
+```
 
 **Output to listing:**
 ```sas
@@ -645,13 +642,26 @@ proc means data = example_dsn1;
 run;
 
 ods pdf close;
-
 ```
 
 ``ods pdf file="file.pdf" STYLE=monochromeprinter;`` will use a nice style for the pace.
 
 ``ods pdf file="file.pdf" style = monochromeprinter;
 title1 height=12PT j=LEFT f=ARIAL "Sending to PDF";`` will left-justify.
+
+
+Another example:
+```sas
+ods pdf file = "filepath/filename.pdf"
+
+proc means data =  mean clm;
+    class country;
+    var sex;
+    where year = 2018;
+run;
+
+ods pdf close;
+```
 
 **Output to Word (RTF):**
 ```
