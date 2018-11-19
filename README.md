@@ -6,6 +6,7 @@
     * [Other Extensions (CSV, XLS...)](#converting-other-extensions---csv-excel-etc)
 * [Data Statements](#data-statements)
     * [Merging](#merging)
+* [Variables](#variables)
 * [Procedures](#procedures)
     * [proc contents](#proc-contents)
     * [proc freq](#proc-freq)
@@ -122,6 +123,7 @@ data dataset_output;
 run;
 ```
 
+
 ## Merging Dataset
 
 For merging datasets, it's **important** that you sort first! Otherwise there will be missing rows from the second dataset. See `proc sort`
@@ -143,7 +145,70 @@ data dataset_example;
     if b;
 run;
 ```
+------------------------
+# Variables
 
+## Variable Names
+### Rules for variable names:
+* It cannot start with a number
+* It cannot contain full stops or else SAS will go look for it in a certain library
+* It needs to begin with an English letter or underscore.
+* It should ***only*** contain letters, numbers, or underscores. (no spaces or other symbols)
+* The maximum length is 32 characters.
+
+### Example of __valid__ variable names:
+* ``VAR1``
+* ``Var1``
+* ``December_2007``
+* `` _count_ ``
+
+### Example of __invalid__ variable names:
+* ``DateDD/MM/YY``
+* ``ThisVariableHasMoreThan32Characters``
+* ``1st_SBP_measure``
+* ``December.2007``
+
+## Renaming variables
+```sas
+data orion.file;
+set orion.file(rename = (newname=oldname));
+run;
+```
+
+or
+
+```sas
+data orion.file;
+set orion.file;
+newname=oldname;
+drop oldname;
+run;
+```
+
+**Problems:**
+If we rename the variables, we cannot use their old names to perform operations on them, even inside the snippet of code..
+```sas
+data example_dsn1;          	
+	set example_dsn1(rename = (var1 = v1 var2 = v2));
+	var3 = var2 + var1;
+run;
+
+*var2 and var1 no longer exist, they have been renamed as v2 and v1.;
+```
+
+## Data Types
+Variables in SAS can be of 2 types:
+* Numeric
+- NAs are shown as ``.``
+- Right-justified by default
+* Character
+- NAs are shown as a blank cell
+- Left-justified by default
+
+To find out the data type of a variable:
+- The above-mentioned defaults can be used to deduce whether one variable is a character string or numeric.
+- We can double click on a column.
+- We can use ``proc contents``.
 
 ------------------------ 
 # Procedures
@@ -218,6 +283,15 @@ Several options can be specified after setting the tables adding `/`, i.e. (`tab
     * `nopercent` Removes the Percentage. [Documentation](https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_freq_sect010.htm)
 * Filtering can be done through `where` clause
 
+
+*Common errors:*
+using class in proc freq
+```
+proc freq data = orion.customer;
+	class gender;
+	table country;
+run;
+```
 ------------------------
 
 ## proc means
@@ -234,6 +308,13 @@ proc means data = mylib.dataset_example min max mean clm maxdec = 1;
 run;
 ```
 
+*Common errors:*
+proc means with a character variable:
+```
+proc means data = orion.staff mean clm;
+	var job_title;
+run;
+```
 ------------------------
 
 ## proc format
