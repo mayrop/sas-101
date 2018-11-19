@@ -24,10 +24,8 @@
   * [Labels](#labels)
   * [proc copy](#proc-copy)
   * [proc sort](#proc-sort)
-- [Out put](#out-put)
-  * [PDFs](#pdfs)
-- [Macros](#macros)
 - [ODS](#ods)
+- [Macros](#macros)
 - [Extra](#extra)
   * [Comments in SAS](#comments-in-sas)
 
