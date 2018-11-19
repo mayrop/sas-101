@@ -168,7 +168,7 @@ We can use them in conjuction with an IF statement.
 ## IF statements
 
 We can use the syntax if... then
-``
+``sas
 data x;
 set x;
 if bmi < 18.5 and bmi ne . then wt_status = 1;
@@ -176,9 +176,17 @@ else if bmi >= 30 then wt_status = 4;
 run;
 ``
 
+``sas
+data nonsales;
+	set orion.nonsales;
+	if country in ("au" "AU") then countrytext = "Australia";
+	else if country in ("us" "US") then countrytext = "United States";
+run;
+``
+
 or we can use the syntax if... then do; a; b; end; .
 
-```
+```sas
 data example_dsn1;
 	set example_dsn1;
 	if bmi < 18.5 and bmi ne . then do; 
@@ -192,10 +200,12 @@ Note that we are filtering out the NAs as SAS considers them a really small numb
 A common error is:
 forgetting to close an if then do with an ***end***.
 
-## Merging Dataset
+## Merging Datasets
 
 For merging datasets, it's **important** that you sort first! Otherwise there will be missing rows from the second dataset. See `proc sort`
 
+### Merge
+``merge`` combines the data sets by column using a common column as a reference.
 ```sas
 data dataset_example;
     merge dataset1 dataset2;
@@ -213,6 +223,42 @@ data dataset_example;
     if b;
 run;
 ```
+
+### Appending
+``
+*This code will add the entries of v1 into b1 by row;
+data combined_dataset;
+	set b1 v1;
+run;
+``
+
+## Outputting subsets
+If then ... output
+``sas
+data australia_sales;
+	set orion.nonsales;
+	if country in ("au" "AU") then output;
+run;
+``
+
+``sas
+data australia_sales2;
+	set orion.nonsales;
+	if country not in ("au" "AU") then delete;
+run;
+``
+Missing data will __not__ be output, since it's ``not in``.
+
+*Errors:*
+Describing NAs as . when for variables they are " " .
+
+``
+data australia_sales2;
+	set orion.nonsales;
+	if country in ("au" "AU") or country = . then delete;
+run;
+``
+
 ------------------------
 # Variables
 
@@ -277,6 +323,8 @@ To find out the data type of a variable:
 - The above-mentioned defaults can be used to deduce whether one variable is a character string or numeric.
 - We can double click on a column.
 - We can use ``proc contents``.
+
+A special type of numeric variable is [dates](dates.md).
 
 ------------------------ 
 # Procedures
@@ -422,6 +470,11 @@ run;
 ------------------------
 
 ## proc print
+``sas
+proc print data = nonsales;
+	where country in ("au" "AU");
+run;
+``
 
 ```sas
 options nocenter;
@@ -443,6 +496,31 @@ proc print data = dataset_example label;
 run;
 ```
 
+*Problems:*
+``sas
+*No titles are printed because title; in the proc print resets all the titles;
+title1 "An example title 1";
+title2 "This is title 2";
+title3;
+
+proc print data = orion.sales(obs = 5);
+	var employee_id first_name last_name salary;
+	title;
+run; 
+``
+
+``
+*Proc means has the title of the previous procedure. We need to reset title; ;
+proc print data = orion.sales(obs = 5);
+	var employee_id first_name last_name salary;
+	title1 "Names and salaries of ORION employees";
+run; 
+
+proc means data = orion.sales mean std median q1 q3;
+	var salary;
+run; 
+
+``
 ------------------------
 
 ## proc copy
