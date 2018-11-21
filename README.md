@@ -5,29 +5,38 @@
     + [Importing your datasets](#importing-your-datasets)
     + [Converting other extensions - csv, excel, etc.](#converting-other-extensions---csv--excel--etc)
 - [Data Statements](#data-statements)
-  * [Using Operators](#using-operators)
-  * [IF statements](#if-statements)
-  * [Merging Datasets](#merging-datasets)
-    + [Merge](#merge)
-    + [Appending](#appending)
-  * [Outputting subsets](#outputting-subsets)
+    - [Using Operators](#using-operators)
+    - [IF statements](#if-statements)
+    - [Merging Datasets](#merging-datasets)
+        - [Merge](#merge)
+        - [Appending](#appending)
+    - [Outputting subsets](#outputting-subsets)
 - [Variables](#variables)
-  * [Variable Names](#variable-names)
-  * [Renaming variables](#renaming-variables)
-  * [Data Types](#data-types)
+    - [Variable Names](#variable-names)
+        - [Rules for variable names:](#rules-for-variable-names)
+        - [Example of __valid__ variable names:](#example-of-valid-variable-names)
+        - [Example of __invalid__ variable names:](#example-of-invalid-variable-names)
+    - [Renaming variables](#renaming-variables)
+    - [Data Types](#data-types)
 - [Procedures](#procedures)
-  * [proc contents](#proc-contents)
-  * [proc freq](#proc-freq)
-  * [proc means](#proc-means)
-  * [proc format](#proc-format)
-  * [proc print](#proc-print)
-  * [Labels](#labels)
-  * [proc copy](#proc-copy)
-  * [proc sort](#proc-sort)
-- [ODS](#ods)
+    - [proc contents](#proc-contents)
+        - [Required syntax](#required-syntax)
+        - [Optional](#optional)
+    - [proc freq](#proc-freq)
+        - [Required syntax](#required-syntax-1)
+        - [Optional](#optional-1)
+    - [proc means](#proc-means)
+    - [proc format](#proc-format)
+    - [Applying formats](#applying-formats)
+        - [Formats already built in SAS](#formats-already-built-in-sas)
+    - [proc print](#proc-print)
+    - [Labels](#labels)
+    - [proc copy](#proc-copy)
+    - [proc sort](#proc-sort)
 - [Macros](#macros)
+- [ODS](#ods)
 - [Extra](#extra)
-  * [Comments in SAS](#comments-in-sas)
+    - [Comments in SAS](#comments-in-sas)
 
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
@@ -470,6 +479,18 @@ proc format;
         "rectangle" = "Rectangle"
         "RECTANGLE" = "Rectangle";
 run;
+*The dollar sign in SAS signifies a character.  This sets up a format “grpcfmt”, which can be applied to a character variable.;
+```
+
+```sas
+proc format;
+	value agegrp 	low - < 10 = "Below 10"
+				10 - < 20 = "10 to below 20"
+				20 - <30 = "20 to below 30"
+				30 - high = "30 or above";
+run;
+*low and high are the lowest and the highest number present.
+This code says: apply the format from 10 to 20(excluded), ... ;
 ```
 
 ```sas
@@ -478,15 +499,24 @@ proc freq data = mylib.dataset_example;
     format shape $shape_format.;
 run;
 ```
+## Applying formats
+To apply the format, use
+``format variable fmt.;`` in e.g. a proc print.
+
+### Formats already built in SAS
+w.			w.d
+best.		bestw.		bestw.d
+comma.		commaw.    	commaw.d
+dollar.		dollarw.	dollarw.d
 
 ------------------------
 
 ## proc print
-``sas
+```sas
 proc print data = nonsales;
 	where country in ("au" "AU");
 run;
-``
+```
 
 ```sas
 options nocenter;
@@ -509,7 +539,7 @@ run;
 ```
 
 *Problems:*
-``sas
+```sas
 *No titles are printed because title; in the proc print resets all the titles;
 title1 "An example title 1";
 title2 "This is title 2";
@@ -519,9 +549,9 @@ proc print data = orion.sales(obs = 5);
 	var employee_id first_name last_name salary;
 	title;
 run; 
-``
+```
 
-``
+```
 *Proc means has the title of the previous procedure. We need to reset title; ;
 proc print data = orion.sales(obs = 5);
 	var employee_id first_name last_name salary;
@@ -532,7 +562,7 @@ proc means data = orion.sales mean std median q1 q3;
 	var salary;
 run; 
 
-``
+```
 
 ## Labels
 Labels change the appearance of variable names (but __do not__ rename them), as opposed to formats which change the appearance of variable values.
