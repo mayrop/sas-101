@@ -50,6 +50,7 @@
     - [proc SGPLOT](#proc-sgplot)
 - [Macros](#macros)
 - [ODS](#ods)
+- [SQL](#sql)
 - [Extra](#extra)
     - [Comments in SAS](#comments-in-sas)
     - [The log](#the-log)
@@ -922,6 +923,55 @@ Proc means also does it.
 ------------------------
 ## proc SGPLOT
 
+**Boxplot**
+```
+proc sgplot data = orion.sales;
+	vbox salary;
+	format salary dollar.;
+	label salary = 'Annual salary';
+run;
+
+*Returns a vertical boxplot;
+```
+
+``hbox`` for a horizontal boxplot.
+
+**Boxplot by groups**
+```
+proc sgplot data = orion.sales;
+	vbox salary / category = gender;
+	format salary dollar.;
+	label salary = 'Annual salary';
+run;
+*Returns vertical boxplots for each category, side by side;
+```
+![](resources/images/vbox.png)
+
+**Histogram**
+```
+proc sgplot data = orion.sales;
+	histogram salary/binwidth=15000;
+	xaxis label = 'Salary';
+	format salary dollar.;
+run;
+```
+
+
+Interesting macro:
+```
+%macro bplotstats(dsn, var, classvar);
+proc means data = &dsn maxdec = 2;
+	class &classvar;
+	var &var;
+run;
+
+proc sgplot data = &dsn;
+	vbox &var / category = &classvar;
+run;
+%mend;
+
+%bplotstats(orion.customer_dim, Customer_Age, Customer_Group);
+```
 
 ------------------------
 
@@ -1054,7 +1104,168 @@ run;
 
 ods rtf close;
 ```
+------------------------
+# SQL
+Can be considerably more efficient than data steps!
+```
+proc sql;
+	select employee_id, employee_gender, salary
+	from orion.employee_payroll
+	where employee_gender = 'F'
+	order by salary desc;
+quit;
 
+```
+The queries follow a specific order:
+proc sql;
+    (create table as)
+	select
+	from 
+	where 
+	group by
+	having
+	order by;
+quit;
+
+```
+proc sql;
+	select *
+	from orion.order_fact
+	where employee_id ne 99999999
+	order by employee_id;
+quit;
+
+```
+
+```
+proc sql;
+	select *, sum(total_retail_price)
+	from orion.order_fact
+	where employee_id ne 99999999
+	order by employee_id;
+quit;
+
+*Create an extra column which contains the sum of the column total_retail_price;
+```
+
+```
+proc sql;
+	select *, sum(total_retail_price) as sumprice
+	from orion.order_fact
+	where employee_id ne 99999999
+	order by employee_id;
+quit;
+
+*ORDER BY does not affect calculated variables;
+
+proc sql;
+	select *, sum(total_retail_price) as sumprice
+	from orion.order_fact
+	where employee_id ne 99999999
+	group by employee_id;
+quit;
+
+*GROUP BY calculates variables based on the groups;
+```
+![](resources/images/groupby.png)
+
+
+
+**Create table creates a new dataset:**
+```
+proc sql;
+create table total_sales as
+	select employee_id, 
+sum(total_retail_price) label = "Total sales" format dollar. as sumprice
+	from orion.order_fact
+	where employee_id ne 99999999
+	group by employee_id;
+quit;
+```
+
+If you want to give a **label **or format (for example) to a variable, include this information next to the variable. For instance, if you want to include a label for employee_id, you would have
+
+``create table total_sales as select employee_id label = “Example”,``
+
+```
+proc sql;
+create table profit as
+	select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit
+	from orion.order_fact
+	where employee_id ne 99999999;
+quit;
+
+```
+
+**Dropping variables:**
+```
+proc sql;
+create table profit(keep = employee_id) as
+select employee_id, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit
+from orion.order_fact;
+quit;
+```
+If we used ``from orion.order_fact(keep = employee_id);`` we would have no variable to perform the calculations.
+
+**Errors:**
+The following will fail because you cannot use WHERE with variables that are created inside proc sql.
+```proc sql;
+create table profit as
+	select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit, sum(calculated profit) as total_profit
+	from orion.order_fact
+	where employee_id ne 99999999 and calculated total_profit > 1000
+	group by employee_id;
+quit;
+```
+
+We need to use the HAVING CALCULATED clause instead.
+```
+proc sql;
+
+create table profit as
+	select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit, sum(calculated profit) as total_profit
+	from orion.order_fact
+	where employee_id ne 99999999
+	group by employee_id
+	having calculated total_profit > 1000;
+
+create table profit_unique as
+	select distinct employee_id,  total_profit
+	from profit;
+
+quit;
+```
+
+**Using SQL to count:**
+```
+proc sql;
+   select count(*) as Count
+      from orion.Employee_Payroll
+      where Employee_Term_Date is missing;
+quit;
+```
+![](resources/images/count.png)
+
+
+
+```
+proc sql;
+create table multiple_sales as 
+	select employee_id, count(*) as count
+	from order_fact
+	where employee_id ne 99999999
+	group by employee_id
+	having count >= 2
+	order by count desc;
+quit;
+
+
+*
+exclude ID 99999999
+output the query result to a table, 
+and order by number of sales records (highest first)
+;
+```
 ------------------------
 
 # Extra
