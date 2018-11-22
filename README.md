@@ -504,29 +504,10 @@ To apply the format, use
 ``format variable fmt.;`` in e.g. a proc print.
 
 ### Formats already built in SAS
-#### Numeric formats:
-**format**. |  | **Format**Widthofwholenumber.0decimals | **Format**Widthofwholenumber.nodecimals
-------- | ------- | ------- | -------
-w. |  |  | w.d
-best. (this show decimals)|  | bestw. |  | bestw.d
-comma. |  | commaw. |  | commaw.d
-dollar. |  | dollarw. | dollarw.d
-Note that the width includes the dot. *2.1* has a width of 3. If I styled *34.2* with a 2.1 format, I would get *34*.
-
-Clearly the width (the length of the whole number) has to be greater than the number of decimals, otherwise we get an error.
-
-#### Character formats:
-| format |
-|--------|
-| $w. |
-
-#### Date and time formats:
-SAS value | Format | We see
-----------|--------|-------
-20752 | date9. | 25Oct2016
-20752 | worddatx. | 25 October 2016
-57600 | timeampm9. | 4:00 PM
-57600 | time. | 16:00:00
+w.			w.d
+best.		bestw.		bestw.d
+comma.		commaw.    	commaw.d
+dollar.		dollarw.	dollarw.d
 
 ------------------------
 
