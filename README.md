@@ -49,11 +49,26 @@
     - [proc univariate (for examining distributions)](#proc-univariate-for-examining-distributions)
     - [proc SGPLOT](#proc-sgplot)
 - [Macros](#macros)
+    - [Setting up macro variables outside a macro](#setting-up-macro-variables-outside-a-macro)
 - [ODS](#ods)
 - [SQL](#sql)
 - [Extra](#extra)
     - [Comments in SAS](#comments-in-sas)
     - [The log](#the-log)
+    - [T-tests](#t-tests)
+        - [One-sample t-test](#one-sample-t-test)
+        - [Two-sample t-test](#two-sample-t-test)
+        - [Paired t-test](#paired-t-test)
+    - [ANOVA (multiple comparison of 3 or more means)](#anova-multiple-comparison-of-3-or-more-means)
+        - [One-way ANOVA](#one-way-anova)
+        - [Two-or-more-way ANOVA](#two-or-more-way-anova)
+        - [If ANOVA is statistically significant](#if-anova-is-statistically-significant)
+    - [Correlation](#correlation)
+    - [Linear regression](#linear-regression)
+        - [proc reg](#proc-reg)
+        - [proc glm](#proc-glm)
+        - [proc glmselect](#proc-glmselect)
+    - [Logistic Regression](#logistic-regression)
 
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
@@ -1015,14 +1030,55 @@ Example:
 You can have a mixture of positional and keyword parameters. 
 **Positional parameters must appear first!**
 
+## Setting up macro variables outside a macro
+
+```
+%let var = employee_id;
+
+%macro sortid(dsn);
+ 	proc sort data = &dsn;
+		by &var;
+	run;
+%mend;
+
+```
 ```
 %macro sortid2(dsn, outdsn = randsort);
  	proc sort data = &dsn out = &outdsn;
 		by employee_id;
 	run;
 %mend;
+
+%let var = employee_id;
+%sortid(employee_payroll);
+%sortid(nonsales);
+
+*This allows us to use the macro variable in other instances;
+```
+```
+proc print data = order_item;
+	var _ALL_;
+	title "Sorted by &var";
+run;
 ```
 
+Possible problems:
+- macro variables **do not** resolve in single quotes. Use double quotes all the time.
+
+Macros in proc sql:
+```
+%let var = order_id;
+proc sql;
+	select count(*) into:nrows
+	from order_item;
+quit;
+
+proc print data = order_item;
+var _ALL_;
+title "&nrows orders, sorted by &var";
+run;
+
+```
 
 ------------------------
 # ODS
@@ -1045,6 +1101,7 @@ run;
 
 ods listing close;
 ```
+
 
 **Output to PDF:**
 ```
@@ -1290,4 +1347,412 @@ proc printto log = prlog new; run;
                 YOUR PROGRAM
 
 proc printto; run; 
+```
+
+----------------
+#Analytics
+
+All models have underlying assumptions. If you don’t know them, you cannot check whether your conclusions are valid.
+**Check your assumptions are justified!**
+
+## T-tests
+
+Used to compare means. 
+
+Either to test:
+- whether the mean of your population is different to a specific value (one-sample t-test)
+- whether two populations have different means (two-sample t-test)
+
+### One-sample t-test
+Question: Is the population mean house sale different to $135,000?
+```
+*Plots(only) suppresses graphs;
+
+proc ttest data = STAT1.ameshousing3 H0 = 135000 plots(only);
+	var Saleprice;
+	title 'One-Sample t-test. Is the 		population mean different to $135,000?';
+run;
+
+```
+![](resources/images/onesampttest.png)
+
+Assumption check:
+- [x] Independent observations - check study design
+- [x] Population is Normally distributed
+
+![](resources/images/onesamplettestplot.png)
+![](resources/images/onesamplettestplot2.png)
+
+
+```
+*You get the confidence interval plot in addition to the other plots produced by default and shownull includes a line at H0;
+
+proc ttest data = STAT1.ameshousing3 H0 = 135000 ***plots(shownull)= interval*** ;
+	var Saleprice;
+	title 'One-Sample t-test. Is the 	population mean different to 	$135,000?';
+run;
+
+```
+![](resources/images/onesampshowint.png)
+
+### Two-sample t-test
+```
+proc ttest data = STAT1.ameshousing3 plots(shownull) = interval;
+	class Masonry_Veneer;
+	var Saleprice;
+run;
+
+*Class statement specifies groups;
+```
+
+![](resources/images/twosampttest.png)
+![](resources/images/twosampttest1.png)
+![](resources/images/twosampttest2.png)
+
+Assumption check:
+- [x] Independent observations - check study design
+- [x] Populations are Normally distributed
+- [x] Groups have equal variances
+
+![](resources/images/twosampttestg1.png)
+![](resources/images/twosampttestg2.png)
+
+If we look at the p-value:
+![](resources/images/twosamppval.png)
+we fail to reject H0.
+
+### Paired t-test
+
+The output is the same as two sample but in the syntax we need to write ``paired``.
+
+```
+proc ttest data = STAT1.ameshousing3;
+paired SalepriceMasY*SalepriceMasN;
+run;
+```
+
+## ANOVA (multiple comparison of 3 or more means)
+
+ANOVA can only tell us if one of the means is significantly different than the others. It does not tell us which and how many means are different.
+
+### One-way ANOVA
+
+Syntax:
+```
+proc glm data=libname.datasetName;
+class categoricalVariable;
+model response=categoricalVariable;
+output out=libname.newName keyword = name;
+run;
+quit;
+```
+
+Example:
+```
+proc glm data=STAT1.ameshousing3;
+class Heating_QC;
+model SalePrice=Heating_QC;
+title "One-Way ANOVA with Heating Quality as Explanatory";
+output out=STAT1.example predicted = predict cookd = cook;
+run;
+quit;
+```
+
+Assumption check:
+- [x] Independent observations - check study design
+- [x] Errors are Normally distributed
+- [x] Groups have equal error variances
+
+To get the diagnostics:
+```
+proc glm data=STAT1.ameshousing3 plots=diagnostics;
+class Heating_QC;
+model SalePrice=Heating_QC;
+run;
+quit;
+```
+![](resources/images/diagnostics.png)
+
+To perform other calculations that involve the means:
+```
+proc glm data=STAT1.ameshousing3 plots=diagnostics;
+class Heating_QC;
+model SalePrice=Heating_QC;
+means Heating_QC / hovtest=levene;
+run;
+quit;
+
+*hovtest=levene checks the assumption of equal variances;
+```
+![](resources/images/levene.png)
+![](resources/images/levene2.png)
+We fail to reject the null hypothesis of equal variances.
+We shall proceed under the assumption variances are equal.
+
+
+When we do not have equal variances:
+```
+*We use Welch’s variance-weighted one-way ANOVA;
+
+proc glm data=STAT1.ameshousing3 plots=diagnostics;
+class Heating_QC;
+model SalePrice=Heating_QC;
+means Heating_QC / welch;
+run;
+quit;
+```
+
+### Two-or-more-way ANOVA
+
+```
+
+proc glm data=STAT1.ameshousing3;
+class Heating_QC Masonry_Veneer;
+model SalePrice=Heating_QC Masonry_Veneer Heating_QC*Masonry_Veneer;
+run;
+quit;
+
+
+
+*/ Model explanatory variables have to be on class statement.
+Can specify interaction terms as well as main effects with * in the model statement.
+*/
+```
+
+```
+*/ Can specify all combinations of main and interaction terms with | in the model statement
+*/
+proc glm data=STAT1.ameshousing3;
+class Heating_QC Masonry_Veneer;
+model SalePrice=Heating_QC|Masonry_Veneer;
+run;
+quit;
+
+```
+
+### If ANOVA is statistically significant
+
+```
+proc glm data=STAT1.ameshousing3 plots(only)=(diffplot(center)); 
+class Heating_QC; 
+model SalePrice=Heating_QC; 
+lsmeans Heating_QC / pdiff=all adjust = T;
+run; 
+quit;
+
+```
+
+```
+proc glm data=STAT1.ameshousing3; 
+class Heating_QC; 
+model SalePrice=Heating_QC; 
+lsmeans Heating_QC / pdiff=all adjust = tukey;
+run; 
+quit;
+
+```
+
+## Correlation
+
+```
+proc sgscatter data=STAT1.ameshousing3;
+plot SalePrice*Gr_Liv_Area / reg;
+run;
+
+*reg adds regression line to plot;
+```
+![](resources/images/correl.png)
+
+```
+%let varNames=Gr_Liv_Area Basement_Area Garage_Area Deck_Porch_Area Lot_Area Age_Sold;
+
+options nolabel;
+proc sgscatter data=STAT1.ameshousing3;
+plot SalePrice*(&varNames) / reg;
+title "Associations of Variables with Sale Price";
+run;
+
+*This sets up a macro variable called varNames. The macro variable is called in the proc sgscatter. You therefore get a plot of SalePrice with EACH of the variables in varNames. Additionally, we are suppressing labels with the options statement.;
+```
+![](resources/images/corr2.png)
+
+
+```
+proc corr data=STAT1.AmesHousing3 rank plots(only)=scatter(nvar=all ellipse=none);
+var Gr_Liv_Area;
+with SalePrice;
+run;
+
+* rank gives ordered correlation coefficients.
+nvar specifies the maximum number of variables in the var list to display (default is 5).
+ellipse=none suppresses the drawing of ellipses on the plots.;
+```
+
+```
+%let varNames=Gr_Liv_Area Basement_Area Garage_Area Deck_Porch_Area Lot_Area Age_Sold;
+
+proc corr data=STAT1.AmesHousing3 rank plots(only)=scatter(nvar=all ellipse=none);
+var &varNames;  with SalePrice;
+title "Correlations and Scatter Plots with SalePrice";
+run;
+
+*/
+This sets up a macro variable called varNames. The macro variable is called in the proc corr. You therefore get the correlation of SalePrice with EACH of the variables in varNames. We have ranked the correlation coefficients using rank in the options of proc corr. Using nvar=all, we produce scatter plots for all variables in varNames with SalePrice (these plots are not shown in the slides for viewing legibility).
+*/
+
+```
+![](resources/images/corrandscat.png)
+
+## Linear regression
+
+### proc reg
+For numerical variables:
+```
+proc reg data=libname.datasetName;
+model response=variables/clb;
+run;
+quit;
+
+*/Model statement specifies regression formula.  If multiple explanatory variables, separate with SPACES.
+clb gives confidence intervals.
+*/
+```
+![](resources/images/simplereg.png)
+
+Checking assumptions:
+- [ ] Errors are independent
+- [ ] Linear relationship between expected value of response and explanatory variables (linear in parameters)
+- [ ] Errors are Normally distributed
+- [ ] Errors have mean zero
+- [ ] Errors have constant variance
+
+
+### proc glm
+For:
+Categorical variables
+Interaction terms
+
+```
+*Same as for ANOVA;
+
+proc glm data=stat1.ameshousing3 plots(only)=diagnostics;
+class Central_Air Full_Bathroom;
+model SalePrice = Central_Air Full_Bathroom Garage_Area;
+run;
+quit;
+```
+![](resources/images/procglm.png)
+Use Type III sum of squares.
+
+To get parameter estimates and confidence intervals for when fitting a linear model using ``proc glm``, in the model statement, add the option ``/solution clparm;``.
+
+```
+proc glm data=stat1.ameshousing3 plots(only)=diagnostic;
+class Central_Air Full_Bathroom;
+model SalePrice = Central_Air Full_Bathroom Garage_Area /solution clparm;
+run;
+quit;
+```
+![](resources/images/cparm.png)
+
+### proc glmselect
+
+To perform model selection.
+```
+
+proc glmselect data=libname.datasetName;
+class categoricalVariables;
+model response=variableNames/selection = selectionMethod select = selectCriterion;
+run;
+
+```
+The methods include:
+* Forward
+* Backwards
+* Stepwise
+
+The criteria include:
+* AIC (Akaike Information criterion)
+* SBC (Schwarz’s Bayesian information criterion)
+* SL (significance level) : using p-values as a criterion for entry
+
+``showpvalues`` in the model statement options will show p-values.
+```
+proc glmselect data=STAT1.ameshousing3;
+class Lot_Shape_2;
+model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=AIC showpvalues;
+run;
+```
+
+If you use ``select = SL``, you can change the cut-off by using:
+* slstay = alpha: for backwards model selection
+* slentry = alpha: for forwards model selection
+* Use both of above for stepwise model selection
+
+```
+proc glmselect data=STAT1.ameshousing3;
+class Lot_Shape_2;
+model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=SL slentry=0.05 showpvalues;
+run;
+
+*/
+slentry means that the variable will be selected if it's p-value is < 0.05.
+Note that the defaults are not 0.05. They are
+0.1 for backwards model selection
+0.5 for forwards model selection
+0.15  for stepwise model selection
+*/
+```
+
+Include ``plots=all`` in first line of the prog glmselect statement to produce some graphical output.
+
+```
+proc glmselect data=STAT1.ameshousing3 plots=all;
+class Lot_Shape_2;
+model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=AIC showpvalues;
+run;
+```
+
+Note that automated model selection methods are supposed to be used as a tool to guide you towards better modelling. They need further scrutiny.
+
+## Logistic Regression
+
+We have a categorical response and we wish to model the (log) odds of being in a particular category.
+```
+proc logistic data=libname.dataName plots(only)=(effect oddsratio);
+model response(event=‘eventValue’)=variableNames/clodds=pl;
+run;
+*/
+clodds gives confidence intervals for odds ratios (using profile likelihood)
+Could also use clodds = Wald
+
+*/
+```
+
+```
+proc logistic data=STAT1.ameshousing3 plots(only)=(effect oddsratio);
+model Bonus(event='1')=Basement_Area / clodds=pl;
+run;
+*/If the house price is over $175,000, the sales person gets a bonus.  0 = No, 1 = Yes
+*/
+```
+
+It is important to check if the check if the model has converged.
+SC stands for Schwarz's Bayesian information criterion.
+![](resources/images/modelconv.png)
+
+
+```
+proc logistic data=libname.dataName plots(only)=(effect oddsratio);
+class categoricalVariable(ref=‘refValue’);
+model response(event=‘eventValue’)=variableNames/clodds=pl;
+run;
+*/To change reference/baseline category.*/
+```
+
+```
+proc logistic data=STAT1.ameshousing3 plots(only)=(effect oddsratio);
+class Fireplaces(ref='0') Lot_Shape_2(ref='Regular');
+model Bonus(event='1')=Basement_Area Fireplaces Lot_Shape_2/ clodds=pl;
+run;
 ```
