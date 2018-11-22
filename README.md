@@ -50,6 +50,7 @@
 - [ODS](#ods)
 - [Extra](#extra)
     - [Comments in SAS](#comments-in-sas)
+    - [The log](#the-log)
 
 ## Important Tips
 * SAS is case insensitive, so it's the same to do `proc contents` and
@@ -847,6 +848,44 @@ run;
 %print_smokers(smoker=Yes, gender=female);
 ```
 
+
+```
+%macro sortid(dsn);
+ 	proc sort data = &dsn;
+		by employee_id;
+	run;
+%mend;
+
+%sortid(employee_addresses);
+
+*If you dont put the & before the variable, SAS doesn't know it's something to replace;
+```
+
+**Possible errors:**
+- mend% is missing
+- when you call the macro you specify more arguments
+- when you get confused between positional and keyword parameters
+
+Example:
+``%macro sortid2(dsn = rand, outdsn = randsort);``
+
+- [x]  %sortid2(dsn = consent, outdsn = outst);
+- [x] %sortid2(outdsn = outst); *Keyword parameters don't not need to be all specified*
+- [ ] %sortid2(rand, outsort); *must have = in the macro call* 
+- [x] %sortid2();
+
+You can have a mixture of positional and keyword parameters. 
+**Positional parameters must appear first!**
+
+```
+%macro sortid2(dsn, outdsn = randsort);
+ 	proc sort data = &dsn out = &outdsn;
+		by employee_id;
+	run;
+%mend;
+```
+
+
 ------------------------
 # ODS
 
@@ -941,4 +980,15 @@ Comments are useful to keep your code readable
 or 
 ```
 /* My comment */
+```
+
+## The log
+```sas
+filename prlog "C:\Users\bmd12s\Desktop\SAS\logs\SASlog_Example.txt";
+
+proc printto log = prlog new; run; 
+
+                YOUR PROGRAM
+
+proc printto; run; 
 ```
