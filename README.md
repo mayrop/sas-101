@@ -55,6 +55,7 @@
 - [Extra](#extra)
     - [Comments in SAS](#comments-in-sas)
     - [The log](#the-log)
+- [Analytics](#analytics)
     - [T-tests](#t-tests)
         - [One-sample t-test](#one-sample-t-test)
         - [Two-sample t-test](#two-sample-t-test)
@@ -1351,7 +1352,7 @@ proc printto; run;
 
 -----------------
 
-#Analytics
+# Analytics
 
 All models have underlying assumptions. If you don’t know them, you cannot check whether your conclusions are valid.
 **Check your assumptions are justified!**
