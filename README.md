@@ -46,6 +46,8 @@
     - [Labels](#labels)
     - [proc copy](#proc-copy)
     - [proc sort](#proc-sort)
+    - [proc univariate (for examining distributions)](#proc-univariate-for-examining-distributions)
+    - [proc SGPLOT](#proc-sgplot)
 - [Macros](#macros)
 - [ODS](#ods)
 - [Extra](#extra)
@@ -654,6 +656,15 @@ proc means data = mylib.dataset_example min max mean clm maxdec = 1;
 run;
 ```
 
+Confidence interval for a parameter.
+```
+proc means data = sales mean clm alpha=0.1;
+	var salary;
+run;
+```
+![](resources/images/CImeans.png)
+
+
 *Common errors:*
 proc means with a character variable:
 ```
@@ -835,6 +846,83 @@ proc sort data = dataset2;
     by id;
 run;
 ```
+-----------------------
+
+## proc univariate (for examining distributions)
+![](resources/images/univariate.png)
+
+The following gives default histogram, boxplot and normal probability plot.
+```
+proc univariate data = orion.nonsales plots;
+	var salary;
+run;
+```
+
+To only get the histogram:
+```proc univariate data = orion.nonsales noprint;
+	histogram salary / nmidpoints = 5  href = 15000;
+run;
+
+*nmidpoints is the number of bins
+href is the reference line at 15000;
+```
+![](resources/images/hist.png)
+
+```
+proc univariate data = orion.sales noprint;
+	class gender;
+	histogram salary;
+run;
+```
+![](resources/images/classedhist.png)
+
+
+```
+proc sort data = orion.sales out = sales;
+	by gender;
+run;
+
+proc univariate data = sales noprint;
+	by gender;
+	histogram salary;
+run;
+
+*Sorts the data by gender, then produces a histogram of salary for each gender separately.  When using “by”, the dataset MUST be sorted by that variable or you will get an error.;
+```
+
+To get a PP plot (QQ PLOT?):
+```
+proc univariate data = orion.nonsales noprint;
+	ppplot salary;
+run;
+
+OR
+
+proc univariate data = orion.nonsales noprint;
+	var salary;
+	ppplot;
+run;
+
+```
+![](resources/images/ppplot.png)
+
+
+To get a confidence interval of some parameter:
+```
+proc univariate data = sales cibasic alpha = 0.1;
+	var salary;
+run;
+
+```
+![](resources/images/CI.png)
+
+
+Proc means also does it.
+
+------------------------
+## proc SGPLOT
+
+
 ------------------------
 
 # Macros
