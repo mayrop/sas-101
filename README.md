@@ -439,9 +439,11 @@ run;
 
 The following:
 ``newnum = compress(number, "() ");`` would remove all curved brackets and blank spaces.
+
 ``newnum = compress(number, , 'kd');`` would remove all characters and only keep the numeric.
 
 Modifiers:
+
 Modifier | Function
 ---------|---------
 a | Remove all upper and lower case characters from string
