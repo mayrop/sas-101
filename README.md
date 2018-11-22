@@ -11,6 +11,16 @@
         - [Merge](#merge)
         - [Appending](#appending)
     - [Outputting subsets](#outputting-subsets)
+    - [Converting numeric to character and viceversa](#converting-numeric-to-character-and-viceversa)
+        - [PUT: Numeric to character](#put-numeric-to-character)
+        - [INPUT: Character to numeric](#input-character-to-numeric)
+    - [Data Cleaning](#data-cleaning)
+        - [UPCASE() and LOWCASE() : convert all characters to upper or lower-case](#upcase-and-lowcase--convert-all-characters-to-upper-or-lower-case)
+    - [Substring](#substring)
+    - [Scan](#scan)
+    - [Tranwrd()](#tranwrd)
+    - [Compress](#compress)
+    - [Concatenation](#concatenation)
 - [Variables](#variables)
     - [Variable Names](#variable-names)
         - [Rules for variable names:](#rules-for-variable-names)
@@ -29,6 +39,9 @@
     - [proc format](#proc-format)
     - [Applying formats](#applying-formats)
         - [Formats already built in SAS](#formats-already-built-in-sas)
+            - [Numeric formats:](#numeric-formats)
+            - [Character formats:](#character-formats)
+            - [Date and time formats:](#date-and-time-formats)
     - [proc print](#proc-print)
     - [Labels](#labels)
     - [proc copy](#proc-copy)
@@ -279,6 +292,199 @@ data australia_sales2;
 	if country in ("au" "AU") or country = . then delete;
 run;
 ``
+## Converting numeric to character and viceversa
+### PUT: Numeric to character
+
+```sas
+data example_dsn1;
+	set example_dsn1;
+	id2 = put(id, 3.);
+run;
+* 3. is the format to be used;
+```
+The new character variable is left-justified with leading spaces.
+Stripping out white space could be vital for ensuring a correct merge.  “     1” is not the same as “1”. 
+To convert without leading spaces:
+
+```sas
+data convert_ex;
+	set convert_ex;
+	id2 = strip(put(id, 3.));
+run;
+```
+This picture shows us how the numbers have been converted to characters. Look at the justification. ![](/resources/images/put.png)
+
+
+### INPUT: Character to numeric
+```
+data example_dsn1;
+	set example_dsn1;
+	weight2 = input(weight, best12.);
+run;
+*
+The informat relates to the appearance of the variable before conversion.  For ‘standard’ numbers, best12. (or bestw.) is usually sufficient.
+;
+```
+Other informats are:
+![](resources/images/input.png)
+
+## Data Cleaning
+### UPCASE() and LOWCASE() : convert all characters to upper or lower-case
+
+```
+data males;
+	set alldata;
+	if upcase(sex) = 'MALE' then output;
+run;
+
+data males;
+	set alldata;
+	if lowcase(sex) = ‘male' then output;
+run;
+```
+or
+```
+data males;
+	set alldata;
+	if upcase(sex) ^= 'MALE' then delete;
+run;
+```
+
+
+Let's say our tables don't display properly because there are lower-case elements etc.
+```
+data alldata;
+	set alldata;
+	sex = lowcase(sex);
+run;
+
+proc freq data = alldata;
+	table sex;
+run;
+```
+## Substring
+Syntax: ``substrn(source, startposition, length)``
+To extract year of birth from dataframe:
+![](resources/images/substr.png)
+```data citizens;
+	set citizens;
+	yob = substrn(dob_char, 6, 4);
+run;
+```
+```
+data presidents;
+	set citizens;
+	if upcase(substrn(prez, 1, 1)) = "Y" then output;
+run;
+```
+NOTE: DO NOT USE `substr` but `substrn` as the former is better.
+
+## Scan
+Syntax: ``scan(var,n,’ ’)``
+
+```
+data citizens;
+	set citizens;
+	surname = scan(name, 1, ',');
+	forename = scan(name, -1, ' ');
+	keep name surname forename;
+run;
+
+*The third argument " " means to continue until there.
+```
+
+![](resources/images/scan.png)
+
+
+## Tranwrd()
+
+Syntax:  ``tranwrd(source, target, replacement)``
+
+```
+*This code replaces Sales with Selling in the Job_title column;
+
+data sales;
+	set orion.sales;
+	new_job_title = 
+		tranwrd(job_title, 'Sales', 'Selling');
+run;
+```
+## Compress
+Compress either:
+- removes certain (specified) characters from a character string
+- removes certain types of characters (when one or more modifiers are used)
+- if no characters are specified, removes spaces
+
+![](resources/images/compress1.png)
+
+```
+data telephone;
+	set mylib.telephone;
+	newnum = compress(number);
+run;
+*Since variable is the only argument, it removes all spaces;
+```
+![](resources/images/compress2.png)
+
+```
+data telephone;
+	set mylib.telephone;
+	newnum = compress(number, "()");
+run;
+
+*It removes everything within the quote marks.;
+```
+![](resources/images/compress3.png)
+
+
+The following:
+``newnum = compress(number, "() ");`` would remove all curved brackets and blank spaces.
+``newnum = compress(number, , 'kd');`` would remove all characters and only keep the numeric.
+
+Modifiers:
+Modifier | Function
+---------|---------
+a | Remove all upper and lower case characters from string
+ak | Keep only alphabetic characters from string
+kd | Keep only numeric characters
+d | Remove numeric values
+i | Remove specified characters both upper and lower case
+k | Keep the specified characters instead of deleting them
+l | Remove lower case characters
+p | Remove punctuation
+s | Remove spaces (default)
+u | Remove uppercase characters
+
+
+## Concatenation
+Function | Explanation
+------- | -------
+cat() | Concatenates character strings without removing leading or trailing blanks
+catx() | Concatenates character strings, removes leading and trailing blanks, and inserts separators
+catt() | Concatenates character strings and removes trailing blanks
+cats() | Concatenates character strings and removes leading and trailing blanks, no separators
+
+```
+data shipping_notes;
+	set orion.shipped;
+	length comment $21;
+	comment = cat('Shipped on ', put(ship_date, mmddyy10.));
+	total = quantity * input(price, dollar7.2);
+	format quantity words.;
+run;
+
+*\ 
+Saves new dataset in work library called shipping_notes.
+Reads dataset from orion library called shipped.
+Sets length of new variable called comment to 21 characters.
+Concatenates ‘Shipped on ‘ and the ship_date (after converting to character with put function using mmddyy10. format) keeping leading and trailing blanks and puts into new variable called comment.
+Calculates variable total which is equal to the variable quantity multiplied by the price (after converting to numeric using dollar7.2 informat).
+Includes format on the variable quantity using the format words.
+
+\*
+```
+
+
 
 ------------------------
 # Variables
@@ -504,10 +710,29 @@ To apply the format, use
 ``format variable fmt.;`` in e.g. a proc print.
 
 ### Formats already built in SAS
-w.			w.d
-best.		bestw.		bestw.d
-comma.		commaw.    	commaw.d
-dollar.		dollarw.	dollarw.d
+#### Numeric formats:
+**format**. |  | **Format**Widthofwholenumber.0decimals | **Format**Widthofwholenumber.nodecimals
+------- | ------- | ------- | -------
+w. |  |  | w.d
+best. (this show decimals)|  | bestw. |  | bestw.d
+comma. |  | commaw. |  | commaw.d
+dollar. |  | dollarw. | dollarw.d
+Note that the width includes the dot. *2.1* has a width of 3. If I styled *34.2* with a 2.1 format, I would get *34*.
+
+Clearly the width (the length of the whole number) has to be greater than the number of decimals, otherwise we get an error.
+
+#### Character formats:
+| format |
+|--------|
+| $w. |
+
+#### Date and time formats:
+SAS value | Format | We see
+----------|--------|-------
+20752 | date9. | 25Oct2016
+20752 | worddatx. | 25 October 2016
+57600 | timeampm9. | 4:00 PM
+57600 | time. | 16:00:00
 
 ------------------------
 
