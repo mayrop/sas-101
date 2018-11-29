@@ -144,10 +144,9 @@ run;
 /* 
     The following code will create a new dataset called *dataset_output*
     from the contents of the dataset dataset_source.
-    It will also rename the column countri to country. 
 */
 data dataset_output;
-    set source.dataset_source(rename = (countri = country));
+    set source.dataset_source(rename = (oldname = newname));
 run;
 ```
 
