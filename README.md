@@ -887,7 +887,8 @@ run;
 * nmidpoints is the number of bins 
 * href is the reference line at 15000;
 ```
-![](resources/images/hist.png){width="200px"}
+
+<img src="resources/images/hist.png" width="200"/>
 
 ```sas
 proc univariate data = orion.sales noprint;
