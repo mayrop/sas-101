@@ -1081,8 +1081,8 @@ proc sql;
 quit;
 
 proc print data = order_item;
-var _ALL_;
-title "&nrows orders, sorted by &var";
+    var _ALL_;
+    title "&nrows orders, sorted by &var";
 run;
 
 ```
@@ -1103,7 +1103,7 @@ ods listing;
 
 title "This is listing output";
 proc means data = example_dsn1;
-	var height;
+    var height;
 run;
 
 ods listing close;
@@ -1111,13 +1111,13 @@ ods listing close;
 
 
 **Output to PDF:**
-```
+```sas
 ods pdf file="C:\Users\bmd12s\file.pdf";
 
 title "Sending output to PDF";
 
 proc means data = example_dsn1;
-	var height;
+    var height;
 run;
 
 ods pdf close;
@@ -1131,7 +1131,7 @@ ods pdf file="C:\Users\bmd12s\file.pdf";
 title "Sending output to PDF";
 
 proc means data = example_dsn1;
-	var height;
+    var height;
 run;
 
 ods pdf close;
@@ -1157,13 +1157,13 @@ ods pdf close;
 ```
 
 **Output to Word (RTF):**
-```
+```sas
 ods rtf file="C:\Users\bmd12s\procprint_example.doc";
 
 title "Sending output to RTF";
 
 proc means data = example_dsn1;
-	var height;
+    var height;
 run;
 
 ods rtf close;
@@ -1171,62 +1171,62 @@ ods rtf close;
 ------------------------
 # SQL
 Can be considerably more efficient than data steps!
-```
+```sas
 proc sql;
-	select employee_id, employee_gender, salary
-	from orion.employee_payroll
-	where employee_gender = 'F'
-	order by salary desc;
+    select employee_id, employee_gender, salary
+    from orion.employee_payroll
+    where employee_gender = 'F'
+    order by salary desc;
 quit;
 
-```
+```sas
 The queries follow a specific order:
 proc sql;
     (create table as)
-	select
-	from 
-	where 
-	group by
-	having
-	order by;
+    select
+    from 
+    where 
+    group by
+    having
+    order by;
+quit;
+
+```sas
+proc sql;
+    select *
+    from orion.order_fact
+    where employee_id ne 99999999
+    order by employee_id;
 quit;
 
 ```
-proc sql;
-	select *
-	from orion.order_fact
-	where employee_id ne 99999999
-	order by employee_id;
-quit;
 
-```
-
-```
+```sas
 proc sql;
-	select *, sum(total_retail_price)
-	from orion.order_fact
-	where employee_id ne 99999999
-	order by employee_id;
+    select *, sum(total_retail_price)
+    from orion.order_fact
+    where employee_id ne 99999999
+    order by employee_id;
 quit;
 
 *Create an extra column which contains the sum of the column total_retail_price;
 ```
 
-```
+```sas
 proc sql;
-	select *, sum(total_retail_price) as sumprice
-	from orion.order_fact
-	where employee_id ne 99999999
-	order by employee_id;
+    select *, sum(total_retail_price) as sumprice
+    from orion.order_fact
+    where employee_id ne 99999999
+    order by employee_id;
 quit;
 
 *ORDER BY does not affect calculated variables;
 
 proc sql;
-	select *, sum(total_retail_price) as sumprice
-	from orion.order_fact
-	where employee_id ne 99999999
-	group by employee_id;
+    select *, sum(total_retail_price) as sumprice
+    from orion.order_fact
+    where employee_id ne 99999999
+    group by employee_id;
 quit;
 
 *GROUP BY calculates variables based on the groups;
@@ -1236,14 +1236,14 @@ quit;
 
 
 **Create table creates a new dataset:**
-```
+```sas
 proc sql;
 create table total_sales as
-	select employee_id, 
+    select employee_id, 
 sum(total_retail_price) label = "Total sales" format dollar. as sumprice
-	from orion.order_fact
-	where employee_id ne 99999999
-	group by employee_id;
+    from orion.order_fact
+    where employee_id ne 99999999
+    group by employee_id;
 quit;
 ```
 
@@ -1251,18 +1251,18 @@ If you want to give a **label **or format (for example) to a variable, include t
 
 ``create table total_sales as select employee_id label = “Example”,``
 
-```
+```sas
 proc sql;
 create table profit as
-	select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit
-	from orion.order_fact
-	where employee_id ne 99999999;
+    select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit
+    from orion.order_fact
+    where employee_id ne 99999999;
 quit;
 
 ```
 
 **Dropping variables:**
-```
+```sas
 proc sql;
 create table profit(keep = employee_id) as
 select employee_id, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit
@@ -1273,47 +1273,53 @@ If we used ``from orion.order_fact(keep = employee_id);`` we would have no varia
 
 **Errors:**
 The following will fail because you cannot use WHERE with variables that are created inside proc sql.
-```proc sql;
+```sas
+proc sql;
+
 create table profit as
-	select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit, sum(calculated profit) as total_profit
-	from orion.order_fact
-	where employee_id ne 99999999 and calculated total_profit > 1000
-	group by employee_id;
+    select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit, sum(calculated profit) as total_profit
+    from orion.order_fact
+    where employee_id ne 99999999 and calculated total_profit > 1000
+    group by employee_id;
+
 quit;
 ```
 
 We need to use the HAVING CALCULATED clause instead.
-```
+```sas
 proc sql;
 
 create table profit as
-	select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit, sum(calculated profit) as total_profit
-	from orion.order_fact
-	where employee_id ne 99999999
-	group by employee_id
-	having calculated total_profit > 1000;
+    select employee_id, quantity, total_retail_price, costprice_per_unit, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit, sum(calculated profit) as total_profit
+    from orion.order_fact
+    where employee_id ne 99999999
+    group by employee_id
+    having calculated total_profit > 1000;
 
 create table profit_unique as
-	select distinct employee_id,  total_profit
-	from profit;
+    select distinct employee_id,  total_profit
+    from profit;
 
 quit;
 ```
 
 **Using SQL to count:**
-```
+```sas
 proc sql;
-   select count(*) as Count
-      from orion.Employee_Payroll
-      where Employee_Term_Date is missing;
+
+select count(*) as Count
+    from orion.Employee_Payroll
+    where Employee_Term_Date is missing;
+
 quit;
 ```
 ![](resources/images/count.png)
 
 
 
-```
+```sas
 proc sql;
+
 create table multiple_sales as 
 	select employee_id, count(*) as count
 	from order_fact
@@ -1336,12 +1342,12 @@ and order by number of sales records (highest first)
 
 ## Comments in SAS
 Comments are useful to keep your code readable
-```
+```sas
 *message;
 ```
 
 or 
-```
+```sas
 /* My comment */
 ```
 
@@ -1350,10 +1356,10 @@ or
 filename prlog "C:\Users\bmd12s\Desktop\SAS\logs\SASlog_Example.txt";
 
 proc printto log = prlog new; run; 
-
                 YOUR PROGRAM
 
-proc printto; run; 
+proc printto; 
+run; 
 ```
 
 -----------------
@@ -1373,7 +1379,7 @@ Either to test:
 
 ### One-sample t-test
 Question: Is the population mean house sale different to $135,000?
-```
+```sas
 *Plots(only) suppresses graphs;
 
 proc ttest data = STAT1.ameshousing3 H0 = 135000 plots(only);
@@ -1392,22 +1398,22 @@ Assumption check:
 ![](resources/images/onesamplettestplot2.png)
 
 
-```
+```sas
 *You get the confidence interval plot in addition to the other plots produced by default and shownull includes a line at H0;
 
 proc ttest data = STAT1.ameshousing3 H0 = 135000 ***plots(shownull)= interval*** ;
-	var Saleprice;
-	title 'One-Sample t-test. Is the 	population mean different to 	$135,000?';
+    var Saleprice;
+    title 'One-Sample t-test. Is the population mean different to $135,000?';
 run;
 
 ```
 ![](resources/images/onesampshowint.png)
 
 ### Two-sample t-test
-```
+```sas
 proc ttest data = STAT1.ameshousing3 plots(shownull) = interval;
-	class Masonry_Veneer;
-	var Saleprice;
+    class Masonry_Veneer;
+    var Saleprice;
 run;
 
 *Class statement specifies groups;
@@ -1433,9 +1439,9 @@ we fail to reject H0.
 
 The output is the same as two sample but in the syntax we need to write ``paired``.
 
-```
+```sas
 proc ttest data = STAT1.ameshousing3;
-paired SalepriceMasY*SalepriceMasN;
+    paired SalepriceMasY*SalepriceMasN;
 run;
 ```
 
@@ -1446,22 +1452,22 @@ ANOVA can only tell us if one of the means is significantly different than the o
 ### One-way ANOVA
 
 Syntax:
-```
+```sas
 proc glm data=libname.datasetName;
-class categoricalVariable;
-model response=categoricalVariable;
-output out=libname.newName keyword = name;
+    class categoricalVariable;
+    model response=categoricalVariable;
+    output out=libname.newName keyword = name;
 run;
 quit;
 ```
 
 Example:
-```
+```sas
 proc glm data=STAT1.ameshousing3;
-class Heating_QC;
-model SalePrice=Heating_QC;
-title "One-Way ANOVA with Heating Quality as Explanatory";
-output out=STAT1.example predicted = predict cookd = cook;
+    class Heating_QC;
+    model SalePrice=Heating_QC;
+    title "One-Way ANOVA with Heating Quality as Explanatory";
+    output out=STAT1.example predicted = predict cookd = cook;
 run;
 quit;
 ```
@@ -1472,21 +1478,21 @@ Assumption check:
 - [x] Groups have equal error variances
 
 To get the diagnostics:
-```
+```sas
 proc glm data=STAT1.ameshousing3 plots=diagnostics;
-class Heating_QC;
-model SalePrice=Heating_QC;
+    class Heating_QC;
+    model SalePrice=Heating_QC;
 run;
 quit;
 ```
 ![](resources/images/diagnostics.png)
 
 To perform other calculations that involve the means:
-```
+```sas
 proc glm data=STAT1.ameshousing3 plots=diagnostics;
-class Heating_QC;
-model SalePrice=Heating_QC;
-means Heating_QC / hovtest=levene;
+    class Heating_QC;
+    model SalePrice=Heating_QC;
+    means Heating_QC / hovtest=levene;
 run;
 quit;
 
@@ -1499,7 +1505,7 @@ We shall proceed under the assumption variances are equal.
 
 
 When we do not have equal variances:
-```
+```sas
 *We use Welch’s variance-weighted one-way ANOVA;
 
 proc glm data=STAT1.ameshousing3 plots=diagnostics;
@@ -1512,11 +1518,10 @@ quit;
 
 ### Two-or-more-way ANOVA
 
-```
-
+```sas
 proc glm data=STAT1.ameshousing3;
-class Heating_QC Masonry_Veneer;
-model SalePrice=Heating_QC Masonry_Veneer Heating_QC*Masonry_Veneer;
+    class Heating_QC Masonry_Veneer;
+    model SalePrice=Heating_QC Masonry_Veneer Heating_QC*Masonry_Veneer;
 run;
 quit;
 
@@ -1527,12 +1532,12 @@ Can specify interaction terms as well as main effects with * in the model statem
 */
 ```
 
-```
+```sas
 */ Can specify all combinations of main and interaction terms with | in the model statement
 */
 proc glm data=STAT1.ameshousing3;
-class Heating_QC Masonry_Veneer;
-model SalePrice=Heating_QC|Masonry_Veneer;
+    class Heating_QC Masonry_Veneer;
+    model SalePrice=Heating_QC|Masonry_Veneer;
 run;
 quit;
 
@@ -1540,21 +1545,21 @@ quit;
 
 ### If ANOVA is statistically significant
 
-```
+```sas
 proc glm data=STAT1.ameshousing3 plots(only)=(diffplot(center)); 
-class Heating_QC; 
-model SalePrice=Heating_QC; 
-lsmeans Heating_QC / pdiff=all adjust = T;
+    class Heating_QC; 
+    model SalePrice=Heating_QC; 
+    lsmeans Heating_QC / pdiff=all adjust = T;
 run; 
 quit;
 
 ```
 
-```
+```sas
 proc glm data=STAT1.ameshousing3; 
-class Heating_QC; 
-model SalePrice=Heating_QC; 
-lsmeans Heating_QC / pdiff=all adjust = tukey;
+    class Heating_QC; 
+    model SalePrice=Heating_QC; 
+    lsmeans Heating_QC / pdiff=all adjust = tukey;
 run; 
 quit;
 
@@ -1562,22 +1567,22 @@ quit;
 
 ## Correlation
 
-```
+```sas
 proc sgscatter data=STAT1.ameshousing3;
-plot SalePrice*Gr_Liv_Area / reg;
+    plot SalePrice*Gr_Liv_Area / reg;
 run;
 
 *reg adds regression line to plot;
 ```
 ![](resources/images/correl.png)
 
-```
+```sas
 %let varNames=Gr_Liv_Area Basement_Area Garage_Area Deck_Porch_Area Lot_Area Age_Sold;
 
 options nolabel;
 proc sgscatter data=STAT1.ameshousing3;
-plot SalePrice*(&varNames) / reg;
-title "Associations of Variables with Sale Price";
+    plot SalePrice*(&varNames) / reg;
+    title "Associations of Variables with Sale Price";
 run;
 
 *This sets up a macro variable called varNames. The macro variable is called in the proc sgscatter. You therefore get a plot of SalePrice with EACH of the variables in varNames. Additionally, we are suppressing labels with the options statement.;
@@ -1585,10 +1590,10 @@ run;
 ![](resources/images/corr2.png)
 
 
-```
+```sas
 proc corr data=STAT1.AmesHousing3 rank plots(only)=scatter(nvar=all ellipse=none);
-var Gr_Liv_Area;
-with SalePrice;
+    var Gr_Liv_Area;
+    with SalePrice;
 run;
 
 * rank gives ordered correlation coefficients.
@@ -1596,12 +1601,12 @@ nvar specifies the maximum number of variables in the var list to display (defau
 ellipse=none suppresses the drawing of ellipses on the plots.;
 ```
 
-```
+```sas
 %let varNames=Gr_Liv_Area Basement_Area Garage_Area Deck_Porch_Area Lot_Area Age_Sold;
 
 proc corr data=STAT1.AmesHousing3 rank plots(only)=scatter(nvar=all ellipse=none);
-var &varNames;  with SalePrice;
-title "Correlations and Scatter Plots with SalePrice";
+    var &varNames;  with SalePrice;
+    title "Correlations and Scatter Plots with SalePrice";
 run;
 
 */
@@ -1615,7 +1620,7 @@ This sets up a macro variable called varNames. The macro variable is called in t
 
 ### proc reg
 For numerical variables:
-```
+```sas
 proc reg data=libname.datasetName;
 model response=variables/clb;
 run;
@@ -1640,12 +1645,12 @@ For:
 Categorical variables
 Interaction terms
 
-```
+```sas
 *Same as for ANOVA;
 
 proc glm data=stat1.ameshousing3 plots(only)=diagnostics;
-class Central_Air Full_Bathroom;
-model SalePrice = Central_Air Full_Bathroom Garage_Area;
+    class Central_Air Full_Bathroom;
+    model SalePrice = Central_Air Full_Bathroom Garage_Area;
 run;
 quit;
 ```
@@ -1654,10 +1659,10 @@ Use Type III sum of squares.
 
 To get parameter estimates and confidence intervals for when fitting a linear model using ``proc glm``, in the model statement, add the option ``/solution clparm;``.
 
-```
+```sas
 proc glm data=stat1.ameshousing3 plots(only)=diagnostic;
-class Central_Air Full_Bathroom;
-model SalePrice = Central_Air Full_Bathroom Garage_Area /solution clparm;
+    class Central_Air Full_Bathroom;
+    model SalePrice = Central_Air Full_Bathroom Garage_Area /solution clparm;
 run;
 quit;
 ```
@@ -1666,11 +1671,10 @@ quit;
 ### proc glmselect
 
 To perform model selection.
-```
-
+```sas
 proc glmselect data=libname.datasetName;
-class categoricalVariables;
-model response=variableNames/selection = selectionMethod select = selectCriterion;
+    class categoricalVariables;
+    model response=variableNames/selection = selectionMethod select = selectCriterion;
 run;
 
 ```
@@ -1685,10 +1689,10 @@ The criteria include:
 * SL (significance level) : using p-values as a criterion for entry
 
 ``showpvalues`` in the model statement options will show p-values.
-```
+```sas
 proc glmselect data=STAT1.ameshousing3;
-class Lot_Shape_2;
-model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=AIC showpvalues;
+    class Lot_Shape_2;
+    model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=AIC showpvalues;
 run;
 ```
 
@@ -1697,10 +1701,10 @@ If you use ``select = SL``, you can change the cut-off by using:
 * slentry = alpha: for forwards model selection
 * Use both of above for stepwise model selection
 
-```
+```sas
 proc glmselect data=STAT1.ameshousing3;
-class Lot_Shape_2;
-model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=SL slentry=0.05 showpvalues;
+    class Lot_Shape_2;
+    model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=SL slentry=0.05 showpvalues;
 run;
 
 */
@@ -1714,10 +1718,10 @@ Note that the defaults are not 0.05. They are
 
 Include ``plots=all`` in first line of the prog glmselect statement to produce some graphical output.
 
-```
+```sas
 proc glmselect data=STAT1.ameshousing3 plots=all;
-class Lot_Shape_2;
-model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=AIC showpvalues;
+    class Lot_Shape_2;
+    model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=AIC showpvalues;
 run;
 ```
 
@@ -1726,9 +1730,9 @@ Note that automated model selection methods are supposed to be used as a tool to
 ## Logistic Regression
 
 We have a categorical response and we wish to model the (log) odds of being in a particular category.
-```
+```sas
 proc logistic data=libname.dataName plots(only)=(effect oddsratio);
-model response(event=‘eventValue’)=variableNames/clodds=pl;
+    model response(event=‘eventValue’)=variableNames/clodds=pl;
 run;
 */
 clodds gives confidence intervals for odds ratios (using profile likelihood)
@@ -1750,17 +1754,17 @@ SC stands for Schwarz's Bayesian information criterion.
 ![](resources/images/modelconv.png)
 
 
-```
+```sas
 proc logistic data=libname.dataName plots(only)=(effect oddsratio);
-class categoricalVariable(ref=‘refValue’);
-model response(event=‘eventValue’)=variableNames/clodds=pl;
+    class categoricalVariable(ref=‘refValue’);
+    model response(event=‘eventValue’)=variableNames/clodds=pl;
 run;
 */To change reference/baseline category.*/
 ```
 
-```
+```sas
 proc logistic data=STAT1.ameshousing3 plots(only)=(effect oddsratio);
-class Fireplaces(ref='0') Lot_Shape_2(ref='Regular');
-model Bonus(event='1')=Basement_Area Fireplaces Lot_Shape_2/ clodds=pl;
+    class Fireplaces(ref='0') Lot_Shape_2(ref='Regular');
+    model Bonus(event='1')=Basement_Area Fireplaces Lot_Shape_2/ clodds=pl;
 run;
 ```
