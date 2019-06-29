@@ -86,7 +86,7 @@ via `libname`
 For SAS, a data library is a set of files (`.sas7bdat`) that are stored in the same physical location of a comptuter. We need to tell SAS the physical location of the datasets you're going to read from.
 
 ### Importing your datasets
-```
+```sas
 libname mylib "C:\My Code\My Folder";
 ```
 
@@ -127,19 +127,17 @@ run;
 	The following code will delete all the variables from orion.nonsales but salary and hire_date.
 */
 data nonsales2;
-	set orion.nonsales;
-	keep salary hire_date;
+    set orion.nonsales;
+    keep salary hire_date;
 run;
 
 /*
 	The following code will delete salary and hire_date from orion.nonsales.
 */
 data nonsales2;
-	set orion.nonsales;
-	drop salary hire_date birth_date;
+    set orion.nonsales;
+    drop salary hire_date birth_date;
 run;
-
-
 
 /* 
     The following code will create a new dataset called *dataset_output*
@@ -221,33 +219,38 @@ We can use them in conjuction with an IF statement.
 ## IF statements
 
 We can use the syntax if... then
-``sas
+```sas
 data x;
 set x;
-if bmi < 18.5 and bmi ne . then wt_status = 1;
-else if bmi >= 30 then wt_status = 4;
-run;
-``
 
-``sas
-data nonsales;
-	set orion.nonsales;
-	if country in ("au" "AU") then countrytext = "Australia";
-	else if country in ("us" "US") then countrytext = "United States";
+if bmi < 18.5 and bmi ne . 
+    then wt_status = 1;
+else if bmi >= 30 
+    then wt_status = 4;
+
 run;
-``
+```
+
+```sas
+data countries;
+    set orion.countries;
+    if country in ("mx" "MX") then countrytext = "Mexico";
+    else if country in ("us" "US") then countrytext = "United States";
+run;
+```
 
 or we can use the syntax if... then do; a; b; end; .
 
 ```sas
 data example_dsn1;
-	set example_dsn1;
-	if bmi < 18.5 and bmi ne . then do; 
-	wt_status = 1;
-	wt_cat = "Underweight";
-	end;
+    set example_dsn1;
+    if bmi < 18.5 and bmi ne . then do; 
+    wt_status = 1;
+    wt_cat = "Underweight";
+    end;
 run;
 ```
+
 Note that we are filtering out the NAs as SAS considers them a really small number.
 
 A common error is:
@@ -278,39 +281,40 @@ run;
 ```
 
 ### Appending
-``
+```sas
 *This code will add the entries of v1 into b1 by row;
 data combined_dataset;
-	set b1 v1;
+    set b1 v1;
 run;
-``
+```
 
 ## Outputting subsets
 If then ... output
-``sas
-data australia_sales;
-	set orion.nonsales;
-	if country in ("au" "AU") then output;
+```sas
+data mexico_sales;
+    set orion.sales;
+    if country in ("mx" "MX") then output;
 run;
-``
+```
 
-``sas
-data australia_sales2;
+```sas
+data mexico_sales2;
 	set orion.nonsales;
-	if country not in ("au" "AU") then delete;
+	if country not in ("mx" "MX") then delete;
 run;
-``
+```
+
 Missing data will __not__ be output, since it's ``not in``.
 
 *Errors:*
 Describing NAs as . when for variables they are " " .
 
-``
+```sas
 data australia_sales2;
 	set orion.nonsales;
 	if country in ("au" "AU") or country = . then delete;
 run;
-``
+```
 ## Converting numeric to character and viceversa
 ### PUT: Numeric to character
 
@@ -327,18 +331,18 @@ To convert without leading spaces:
 
 ```sas
 data convert_ex;
-	set convert_ex;
-	id2 = strip(put(id, 3.));
+    set convert_ex;
+    id2 = strip(put(id, 3.));
 run;
 ```
 This picture shows us how the numbers have been converted to characters. Look at the justification. ![](/resources/images/put.png)
 
 
 ### INPUT: Character to numeric
-```
+```sas
 data example_dsn1;
-	set example_dsn1;
-	weight2 = input(weight, best12.);
+    set example_dsn1;
+    weight2 = input(weight, best12.);
 run;
 *
 The informat relates to the appearance of the variable before conversion.  For ‘standard’ numbers, best12. (or bestw.) is usually sufficient.
@@ -350,50 +354,51 @@ Other informats are:
 ## Data Cleaning
 ### UPCASE() and LOWCASE() : convert all characters to upper or lower-case
 
-```
+```sas
 data males;
-	set alldata;
-	if upcase(sex) = 'MALE' then output;
+    set alldata;
+    if upcase(sex) = 'MALE' then output;
 run;
 
 data males;
-	set alldata;
-	if lowcase(sex) = ‘male' then output;
+    set alldata;
+    if lowcase(sex) = ‘male' then output;
 run;
 ```
 or
-```
+```sas
 data males;
-	set alldata;
-	if upcase(sex) ^= 'MALE' then delete;
+    set alldata;
+    if upcase(sex) ^= 'MALE' then delete;
 run;
 ```
 
 
 Let's say our tables don't display properly because there are lower-case elements etc.
-```
+```sas
 data alldata;
-	set alldata;
-	sex = lowcase(sex);
+    set alldata;
+    sex = lowcase(sex);
 run;
 
 proc freq data = alldata;
-	table sex;
+    table sex;
 run;
 ```
 ## Substring
 Syntax: ``substrn(source, startposition, length)``
 To extract year of birth from dataframe:
 ![](resources/images/substr.png)
-```data citizens;
-	set citizens;
-	yob = substrn(dob_char, 6, 4);
+```sas
+    data citizens;
+    set citizens;
+    yob = substrn(dob_char, 6, 4);
 run;
 ```
 ```
 data presidents;
-	set citizens;
-	if upcase(substrn(prez, 1, 1)) = "Y" then output;
+    set citizens;
+    if upcase(substrn(prez, 1, 1)) = "Y" then output;
 run;
 ```
 NOTE: DO NOT USE `substr` but `substrn` as the former is better.
@@ -403,10 +408,10 @@ Syntax: ``scan(var,n,’ ’)``
 
 ```
 data citizens;
-	set citizens;
-	surname = scan(name, 1, ',');
-	forename = scan(name, -1, ' ');
-	keep name surname forename;
+    set citizens;
+    surname = scan(name, 1, ',');
+    forename = scan(name, -1, ' ');
+    keep name surname forename;
 run;
 
 *The third argument " " means to continue until there.
@@ -423,9 +428,8 @@ Syntax:  ``tranwrd(source, target, replacement)``
 *This code replaces Sales with Selling in the Job_title column;
 
 data sales;
-	set orion.sales;
-	new_job_title = 
-		tranwrd(job_title, 'Sales', 'Selling');
+    set orion.sales;
+    new_job_title = tranwrd(job_title, 'Sales', 'Selling');
 run;
 ```
 ## Compress
@@ -438,8 +442,8 @@ Compress either:
 
 ```
 data telephone;
-	set mylib.telephone;
-	newnum = compress(number);
+    set mylib.telephone;
+    newnum = compress(number);
 run;
 *Since variable is the only argument, it removes all spaces;
 ```
@@ -447,8 +451,8 @@ run;
 
 ```
 data telephone;
-	set mylib.telephone;
-	newnum = compress(number, "()");
+    set mylib.telephone;
+    newnum = compress(number, "()");
 run;
 
 *It removes everything within the quote marks.;
@@ -485,13 +489,13 @@ catx() | Concatenates character strings, removes leading and trailing blanks, an
 catt() | Concatenates character strings and removes trailing blanks
 cats() | Concatenates character strings and removes leading and trailing blanks, no separators
 
-```
+```sas
 data shipping_notes;
-	set orion.shipped;
-	length comment $21;
-	comment = cat('Shipped on ', put(ship_date, mmddyy10.));
-	total = quantity * input(price, dollar7.2);
-	format quantity words.;
+    set orion.shipped;
+    length comment $21;
+    comment = cat('Shipped on ', put(ship_date, mmddyy10.));
+    total = quantity * input(price, dollar7.2);
+    format quantity words.;
 run;
 
 *\ 
@@ -532,8 +536,8 @@ Includes format on the variable quantity using the format words.
 
 ## Renaming variables
 ```sas
-data orion.file;
-set orion.file(rename = (newname=oldname));
+    data orion.file;
+    set orion.file(rename = (newname=oldname));
 run;
 ```
 
@@ -541,9 +545,9 @@ or
 
 ```sas
 data orion.file;
-set orion.file;
-newname=oldname;
-drop oldname;
+    set orion.file;
+    newname=oldname;
+    drop oldname;
 run;
 ```
 
@@ -551,8 +555,8 @@ run;
 If we rename the variables, we cannot use their old names to perform operations on them, even inside the snippet of code..
 ```sas
 data example_dsn1;          	
-	set example_dsn1(rename = (var1 = v1 var2 = v2));
-	var3 = var2 + var1;
+    set example_dsn1(rename = (var1 = v1 var2 = v2));
+    var3 = var2 + var1;
 run;
 
 *var2 and var1 no longer exist, they have been renamed as v2 and v1.;
@@ -561,11 +565,11 @@ run;
 ## Data Types
 Variables in SAS can be of 2 types:
 * Numeric
-	- NAs are shown as ``.``
-	- Right-justified by default
+    - NAs are shown as ``.``
+    - Right-justified by default
 * Character
-	- NAs are shown as a blank cell
-	- Left-justified by default
+    - NAs are shown as a blank cell
+    - Left-justified by default
 
 To find out the data type of a variable:
 - The above-mentioned defaults can be used to deduce whether one variable is a character string or numeric.
@@ -586,13 +590,13 @@ This procedure describes the contents of a dataset and prints the directory of t
 **Syntax:**
 
 ```sas
-proc contents data = mylib.dataset_example order = varnum;
-run;
+    proc contents data = mylib.dataset_example order = varnum;
+    run;
 ```
 
 ```sas
-proc contents data = mylib.dataset_example out=mydata (keep= name varnum) noprint varnum;
-run;
+    proc contents data = mylib.dataset_example out=mydata (keep= name varnum) noprint varnum;
+    run;
 ```
 
 ### Required syntax
@@ -652,8 +656,8 @@ Several options can be specified after setting the tables adding `/`, i.e. (`tab
 using class in proc freq
 ```
 proc freq data = orion.customer;
-	class gender;
-	table country;
+    class gender;
+    table country;
 run;
 ```
 ------------------------
@@ -673,9 +677,9 @@ run;
 ```
 
 Confidence interval for a parameter.
-```
+```sas
 proc means data = sales mean clm alpha=0.1;
-	var salary;
+    var salary;
 run;
 ```
 ![](resources/images/CImeans.png)
@@ -683,9 +687,9 @@ run;
 
 *Common errors:*
 proc means with a character variable:
-```
+```sas
 proc means data = orion.staff mean clm;
-	var job_title;
+    var job_title;
 run;
 ```
 ------------------------
@@ -720,10 +724,10 @@ run;
 
 ```sas
 proc format;
-	value agegrp 	low - < 10 = "Below 10"
-				10 - < 20 = "10 to below 20"
-				20 - <30 = "20 to below 30"
-				30 - high = "30 or above";
+    value agegrp    low - < 10 = "Below 10"
+                    10 - < 20 = "10 to below 20"
+                    20 - <30 = "20 to below 30"
+                    30 - high = "30 or above";
 run;
 *low and high are the lowest and the highest number present.
 This code says: apply the format from 10 to 20(excluded), ... ;
@@ -769,7 +773,7 @@ SAS value | Format | We see
 ## proc print
 ```sas
 proc print data = nonsales;
-	where country in ("au" "AU");
+    where country in ("au" "AU");
 run;
 ```
 
@@ -801,20 +805,20 @@ title2 "This is title 2";
 title3;
 
 proc print data = orion.sales(obs = 5);
-	var employee_id first_name last_name salary;
-	title;
+    var employee_id first_name last_name salary;
+    title;
 run; 
 ```
 
-```
+```sas
 *Proc means has the title of the previous procedure. We need to reset title; ;
 proc print data = orion.sales(obs = 5);
-	var employee_id first_name last_name salary;
-	title1 "Names and salaries of ORION employees";
+    var employee_id first_name last_name salary;
+    title1 "Names and salaries of ORION employees";
 run; 
 
 proc means data = orion.sales mean std median q1 q3;
-	var salary;
+    var salary;
 run; 
 
 ```
@@ -868,15 +872,16 @@ run;
 ![](resources/images/univariate.png)
 
 The following gives default histogram, boxplot and normal probability plot.
-```
+```sas
 proc univariate data = orion.nonsales plots;
-	var salary;
+    var salary;
 run;
 ```
 
 To only get the histogram:
-```proc univariate data = orion.nonsales noprint;
-	histogram salary / nmidpoints = 5  href = 15000;
+```sas
+    proc univariate data = orion.nonsales noprint;
+    histogram salary / nmidpoints = 5  href = 15000;
 run;
 
 *nmidpoints is the number of bins
@@ -884,39 +889,39 @@ href is the reference line at 15000;
 ```
 ![](resources/images/hist.png)
 
-```
+```sas
 proc univariate data = orion.sales noprint;
-	class gender;
-	histogram salary;
+    class gender;
+    histogram salary;
 run;
 ```
 ![](resources/images/classedhist.png)
 
 
-```
+```sas
 proc sort data = orion.sales out = sales;
-	by gender;
+    by gender;
 run;
 
 proc univariate data = sales noprint;
-	by gender;
-	histogram salary;
+    by gender;
+    histogram salary;
 run;
 
 *Sorts the data by gender, then produces a histogram of salary for each gender separately.  When using “by”, the dataset MUST be sorted by that variable or you will get an error.;
 ```
 
 To get a PP plot (QQ PLOT?):
-```
+```sas
 proc univariate data = orion.nonsales noprint;
-	ppplot salary;
+    ppplot salary;
 run;
-
+```
 OR
-
+```sas
 proc univariate data = orion.nonsales noprint;
-	var salary;
-	ppplot;
+    var salary;
+    ppplot;
 run;
 
 ```
@@ -924,9 +929,9 @@ run;
 
 
 To get a confidence interval of some parameter:
-```
+```sas
 proc univariate data = sales cibasic alpha = 0.1;
-	var salary;
+    var salary;
 run;
 
 ```
@@ -939,11 +944,11 @@ Proc means also does it.
 ## proc SGPLOT
 
 **Boxplot**
-```
+```sas
 proc sgplot data = orion.sales;
-	vbox salary;
-	format salary dollar.;
-	label salary = 'Annual salary';
+    vbox salary;
+    format salary dollar.;
+    label salary = 'Annual salary';
 run;
 
 *Returns a vertical boxplot;
@@ -952,36 +957,36 @@ run;
 ``hbox`` for a horizontal boxplot.
 
 **Boxplot by groups**
-```
+```sas
 proc sgplot data = orion.sales;
-	vbox salary / category = gender;
-	format salary dollar.;
-	label salary = 'Annual salary';
+    vbox salary / category = gender;
+    format salary dollar.;
+    label salary = 'Annual salary';
 run;
 *Returns vertical boxplots for each category, side by side;
 ```
 ![](resources/images/vbox.png)
 
 **Histogram**
-```
+```sas
 proc sgplot data = orion.sales;
-	histogram salary/binwidth=15000;
-	xaxis label = 'Salary';
-	format salary dollar.;
+    histogram salary/binwidth=15000;
+    xaxis label = 'Salary';
+    format salary dollar.;
 run;
 ```
 
 
 Interesting macro:
-```
+```sas
 %macro bplotstats(dsn, var, classvar);
 proc means data = &dsn maxdec = 2;
-	class &classvar;
-	var &var;
+    class &classvar;
+    var &var;
 run;
 
 proc sgplot data = &dsn;
-	vbox &var / category = &classvar;
+    vbox &var / category = &classvar;
 run;
 %mend;
 
@@ -1002,11 +1007,11 @@ run;
 ```
 
 
-```
+```sas
 %macro sortid(dsn);
- 	proc sort data = &dsn;
-		by employee_id;
-	run;
+    proc sort data = &dsn;
+        by employee_id;
+    run;
 %mend;
 
 %sortid(employee_addresses);
@@ -1032,21 +1037,21 @@ You can have a mixture of positional and keyword parameters.
 
 ## Setting up macro variables outside a macro
 
-```
+```sas
 %let var = employee_id;
 
 %macro sortid(dsn);
- 	proc sort data = &dsn;
-		by &var;
-	run;
+    proc sort data = &dsn;
+        by &var;
+    run;
 %mend;
 
 ```
 ```
 %macro sortid2(dsn, outdsn = randsort);
- 	proc sort data = &dsn out = &outdsn;
-		by employee_id;
-	run;
+    proc sort data = &dsn out = &outdsn;
+        by employee_id;
+    run;
 %mend;
 
 %let var = employee_id;
@@ -1057,8 +1062,8 @@ You can have a mixture of positional and keyword parameters.
 ```
 ```
 proc print data = order_item;
-	var _ALL_;
-	title "Sorted by &var";
+    var _ALL_;
+    title "Sorted by &var";
 run;
 ```
 
@@ -1066,11 +1071,11 @@ Possible problems:
 - macro variables **do not** resolve in single quotes. Use double quotes all the time.
 
 Macros in proc sql:
-```
+```sas
 %let var = order_id;
 proc sql;
-	select count(*) into:nrows
-	from order_item;
+    select count(*) into:nrows
+    from order_item;
 quit;
 
 proc print data = order_item;
