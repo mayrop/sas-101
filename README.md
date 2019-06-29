@@ -335,7 +335,7 @@ data convert_ex;
     id2 = strip(put(id, 3.));
 run;
 ```
-This picture shows us how the numbers have been converted to characters. Look at the justification. ![](/resources/images/put.png)
+This picture shows us how the numbers have been converted to characters. Look at the justification. <img src="/resources/images/put.png" width="400">
 
 
 ### INPUT: Character to numeric
@@ -349,7 +349,7 @@ The informat relates to the appearance of the variable before conversion.  For â
 ;
 ```
 Other informats are:
-![](resources/images/input.png)
+<img src="resources/images/input.png" width="400">
 
 ## Data Cleaning
 ### UPCASE() and LOWCASE() : convert all characters to upper or lower-case
@@ -388,7 +388,7 @@ run;
 ## Substring
 Syntax: ``substrn(source, startposition, length)``
 To extract year of birth from dataframe:
-![](resources/images/substr.png)
+<img src="resources/images/substr.png" width="400">
 ```sas
     data citizens;
     set citizens;
@@ -417,7 +417,7 @@ run;
 *The third argument " " means to continue until there.
 ```
 
-![](resources/images/scan.png)
+<img src="resources/images/scan.png" width="400">
 
 
 ## Tranwrd()
@@ -438,7 +438,7 @@ Compress either:
 - removes certain types of characters (when one or more modifiers are used)
 - if no characters are specified, removes spaces
 
-![](resources/images/compress1.png)
+<img src="resources/images/compress1.png" width="400">
 
 ```
 data telephone;
@@ -447,7 +447,7 @@ data telephone;
 run;
 *Since variable is the only argument, it removes all spaces;
 ```
-![](resources/images/compress2.png)
+<img src="resources/images/compress2.png" width="400">
 
 ```
 data telephone;
@@ -457,7 +457,7 @@ run;
 
 *It removes everything within the quote marks.;
 ```
-![](resources/images/compress3.png)
+<img src="resources/images/compress3.png" width="400">
 
 
 The following:
@@ -682,7 +682,7 @@ proc means data = sales mean clm alpha=0.1;
     var salary;
 run;
 ```
-![](resources/images/CImeans.png)
+<img src="resources/images/CImeans.png" width="400">
 
 
 *Common errors:*
@@ -869,7 +869,7 @@ run;
 -----------------------
 
 ## proc univariate (for examining distributions)
-![](resources/images/univariate.png)
+<img src="resources/images/univariate.png" width="400">
 
 The following gives default histogram, boxplot and normal probability plot.
 ```sas
@@ -927,7 +927,7 @@ proc univariate data = orion.nonsales noprint;
 run;
 
 ```
-![](resources/images/ppplot.png)
+<img src="resources/images/ppplot.png" width="400">
 
 
 To get a confidence interval of some parameter:
@@ -937,7 +937,7 @@ proc univariate data = sales cibasic alpha = 0.1;
 run;
 
 ```
-![](resources/images/CI.png)
+<img src="resources/images/CI.png" width="400">
 
 
 Proc means also does it.
@@ -967,7 +967,7 @@ proc sgplot data = orion.sales;
 run;
 *Returns vertical boxplots for each category, side by side;
 ```
-![](resources/images/vbox.png)
+<img src="resources/images/vbox.png" width="400">
 
 **Histogram**
 ```sas
@@ -1231,7 +1231,7 @@ quit;
 
 *GROUP BY calculates variables based on the groups;
 ```
-![](resources/images/groupby.png)
+<img src="resources/images/groupby.png" width="400">
 
 
 
@@ -1313,7 +1313,7 @@ select count(*) as Count
 
 quit;
 ```
-![](resources/images/count.png)
+<img src="resources/images/count.png" width="400">
 
 
 
@@ -1388,14 +1388,14 @@ proc ttest data = STAT1.ameshousing3 H0 = 135000 plots(only);
 run;
 
 ```
-![](resources/images/onesampttest.png)
+<img src="resources/images/onesampttest.png" width="400">
 
 Assumption check:
 - [x] Independent observations - check study design
 - [x] Population is Normally distributed
 
-![](resources/images/onesamplettestplot.png)
-![](resources/images/onesamplettestplot2.png)
+<img src="resources/images/onesamplettestplot.png" width="400">
+<img src="resources/images/onesamplettestplot2.png" width="400">
 
 
 ```sas
@@ -1407,7 +1407,7 @@ proc ttest data = STAT1.ameshousing3 H0 = 135000 ***plots(shownull)= interval***
 run;
 
 ```
-![](resources/images/onesampshowint.png)
+<img src="resources/images/onesampshowint.png" width="400">
 
 ### Two-sample t-test
 ```sas
@@ -1419,20 +1419,20 @@ run;
 *Class statement specifies groups;
 ```
 
-![](resources/images/twosampttest.png)
-![](resources/images/twosampttest1.png)
-![](resources/images/twosampttest2.png)
+<img src="resources/images/twosampttest.png" width="400">
+<img src="resources/images/twosampttest1.png" width="400">
+<img src="resources/images/twosampttest2.png" width="400">
 
 Assumption check:
 - [x] Independent observations - check study design
 - [x] Populations are Normally distributed
 - [x] Groups have equal variances
 
-![](resources/images/twosampttestg1.png)
-![](resources/images/twosampttestg2.png)
+<img src="resources/images/twosampttestg1.png" width="400">
+<img src="resources/images/twosampttestg2.png" width="400">
 
 If we look at the p-value:
-![](resources/images/twosamppval.png)
+<img src="resources/images/twosamppval.png" width="400">
 we fail to reject H0.
 
 ### Paired t-test
@@ -1485,7 +1485,7 @@ proc glm data=STAT1.ameshousing3 plots=diagnostics;
 run;
 quit;
 ```
-![](resources/images/diagnostics.png)
+<img src="resources/images/diagnostics.png" width="400">
 
 To perform other calculations that involve the means:
 ```sas
@@ -1498,8 +1498,8 @@ quit;
 
 *hovtest=levene checks the assumption of equal variances;
 ```
-![](resources/images/levene.png)
-![](resources/images/levene2.png)
+<img src="resources/images/levene.png" width="400">
+<img src="resources/images/levene2.png" width="400">
 We fail to reject the null hypothesis of equal variances.
 We shall proceed under the assumption variances are equal.
 
@@ -1574,7 +1574,7 @@ run;
 
 *reg adds regression line to plot;
 ```
-![](resources/images/correl.png)
+<img src="resources/images/correl.png" width="400">
 
 ```sas
 %let varNames=Gr_Liv_Area Basement_Area Garage_Area Deck_Porch_Area Lot_Area Age_Sold;
@@ -1587,7 +1587,7 @@ run;
 
 *This sets up a macro variable called varNames. The macro variable is called in the proc sgscatter. You therefore get a plot of SalePrice with EACH of the variables in varNames. Additionally, we are suppressing labels with the options statement.;
 ```
-![](resources/images/corr2.png)
+<img src="resources/images/corr2.png" width="400">
 
 
 ```sas
@@ -1614,7 +1614,7 @@ This sets up a macro variable called varNames. The macro variable is called in t
 */
 
 ```
-![](resources/images/corrandscat.png)
+<img src="resources/images/corrandscat.png" width="400">
 
 ## Linear regression
 
@@ -1630,7 +1630,7 @@ quit;
 clb gives confidence intervals.
 */
 ```
-![](resources/images/simplereg.png)
+<img src="resources/images/simplereg.png" width="400">
 
 Checking assumptions:
 - [ ] Errors are independent
@@ -1654,7 +1654,7 @@ proc glm data=stat1.ameshousing3 plots(only)=diagnostics;
 run;
 quit;
 ```
-![](resources/images/procglm.png)
+<img src="resources/images/procglm.png" width="400">
 Use Type III sum of squares.
 
 To get parameter estimates and confidence intervals for when fitting a linear model using ``proc glm``, in the model statement, add the option ``/solution clparm;``.
@@ -1666,7 +1666,7 @@ proc glm data=stat1.ameshousing3 plots(only)=diagnostic;
 run;
 quit;
 ```
-![](resources/images/cparm.png)
+<img src="resources/images/cparm.png" width="400">
 
 ### proc glmselect
 
@@ -1751,7 +1751,7 @@ run;
 
 It is important to check if the check if the model has converged.
 SC stands for Schwarz's Bayesian information criterion.
-![](resources/images/modelconv.png)
+<img src="resources/images/modelconv.png" width="400">
 
 
 ```sas
