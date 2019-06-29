@@ -299,8 +299,8 @@ run;
 
 ```sas
 data mexico_sales2;
-	set orion.nonsales;
-	if country not in ("mx" "MX") then delete;
+    set orion.nonsales;
+    if country not in ("mx" "MX") then delete;
 run;
 ```
 
@@ -310,9 +310,9 @@ Missing data will __not__ be output, since it's ``not in``.
 Describing NAs as . when for variables they are " " .
 
 ```sas
-data australia_sales2;
-	set orion.nonsales;
-	if country in ("au" "AU") or country = . then delete;
+data mexico_sales2;
+    set orion.nonsales;
+    if country in ("mx" "MX") or country = . then delete;
 run;
 ```
 ## Converting numeric to character and viceversa
