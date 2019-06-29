@@ -395,7 +395,7 @@ To extract year of birth from dataframe:
     yob = substrn(dob_char, 6, 4);
 run;
 ```
-```
+```sas
 data presidents;
     set citizens;
     if upcase(substrn(prez, 1, 1)) = "Y" then output;
@@ -880,14 +880,14 @@ run;
 
 To only get the histogram:
 ```sas
-    proc univariate data = orion.nonsales noprint;
+proc univariate data = orion.nonsales noprint;
     histogram salary / nmidpoints = 5  href = 15000;
 run;
 
-*nmidpoints is the number of bins
-href is the reference line at 15000;
+* nmidpoints is the number of bins 
+* href is the reference line at 15000;
 ```
-![](resources/images/hist.png)
+![](resources/images/hist.png | width=200)
 
 ```sas
 proc univariate data = orion.sales noprint;
