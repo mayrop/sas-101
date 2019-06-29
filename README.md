@@ -888,7 +888,7 @@ run;
 * href is the reference line at 15000;
 ```
 
-<img src="resources/images/hist.png" width="200"/>
+<img src="resources/images/hist.png" width="400"/>
 
 ```sas
 proc univariate data = orion.sales noprint;
@@ -896,7 +896,8 @@ proc univariate data = orion.sales noprint;
     histogram salary;
 run;
 ```
-![](resources/images/classedhist.png)
+
+<img src="resources/images/classedhist.png" width="400"/>
 
 
 ```sas
