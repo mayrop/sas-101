@@ -1143,7 +1143,7 @@ ods pdf close;
 
 **Output to Word (RTF):**
 ```sas
-ods rtf file="C:\Users\bmd12s\procprint_example.doc";
+ods rtf file="C:\Users\user1\procprint_example.doc";
 
 title "Sending output to RTF";
 
@@ -1179,6 +1179,7 @@ proc sql;
 quit;
 ```
 
+Examples:
 ```sas
 proc sql;
     select *
@@ -1226,17 +1227,21 @@ quit;
 ```sas
 proc sql;
 create table total_sales as
-    select employee_id, 
-sum(total_retail_price) label = "Total sales" format dollar. as sumprice
+    select employee_id, sum(total_retail_price) label = "Total sales" format dollar. as sumprice
     from orion.order_fact
     where employee_id ne 99999999
     group by employee_id;
 quit;
 ```
 
-If you want to give a **label **or format (for example) to a variable, include this information next to the variable. For instance, if you want to include a label for employee_id, you would have
+If you want to give a **label** or format (for example) to a variable, include this information next to the variable. For instance, if you want to include a label for employee_id, you would have
 
-``create table total_sales as select employee_id label = “Example”,``
+```sas
+proc sql;
+create table total_sales 
+    as select employee_id label = "Example";
+quit;
+```
 
 ```sas
 proc sql;
@@ -1252,8 +1257,8 @@ quit;
 ```sas
 proc sql;
 create table profit(keep = employee_id) as
-select employee_id, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit
-from orion.order_fact;
+    select employee_id, total_retail_price - (CostPrice_Per_Unit*Quantity) as profit
+    from orion.order_fact;
 quit;
 ```
 If we used ``from orion.order_fact(keep = employee_id);`` we would have no variable to perform the calculations.
@@ -1268,7 +1273,6 @@ create table profit as
     from orion.order_fact
     where employee_id ne 99999999 and calculated total_profit > 1000
     group by employee_id;
-
 quit;
 ```
 
