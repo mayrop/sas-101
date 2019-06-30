@@ -820,25 +820,21 @@ run;
 proc means data = orion.sales mean std median q1 q3;
     var salary;
 run; 
-
 ```
 
-## Labels
-Labels change the appearance of variable names (but __do not__ rename them), as opposed to formats which change the appearance of variable values.
-
-To use them:
-<pre>
-proc print data=orion.sales <b>label</b>;
+Labels change the appearance of variable names (but they __do not__ rename them), as opposed to formats which change the appearance of variable values. To use them:
+```sas
+proc print data=orion.sales label;
    var Employee_ID First_Name Last_Name Salary;
-   <b>label Employee_ID="Sales ID" 
+   label Employee_ID="Sales ID" 
          First_Name="First Name"
          Last_Name="Last Name" 
-         Salary="Annual Salary";</b>
+         Salary="Annual Salary";
    format Salary dollar8.;
    where Salary > 80000;   
    by Country;
 run;
-</pre>
+```
 
 ------------------------
 
@@ -868,8 +864,8 @@ run;
 ```
 -----------------------
 
-## proc univariate (for examining distributions)
-<img src="resources/images/univariate.png" width="400">
+## proc univariate
+<img src="resources/images/univariate.png" width="300">
 
 The following gives default histogram, boxplot and normal probability plot.
 ```sas
@@ -937,13 +933,12 @@ proc univariate data = sales cibasic alpha = 0.1;
 run;
 
 ```
-<img src="resources/images/CI.png" width="400">
-
+<img src="resources/images/CI.png" width="300">
 
 Proc means also does it.
 
 ------------------------
-## proc SGPLOT
+## proc sgplot
 
 **Boxplot**
 ```sas
@@ -976,23 +971,6 @@ proc sgplot data = orion.sales;
     xaxis label = 'Salary';
     format salary dollar.;
 run;
-```
-
-
-Interesting macro:
-```sas
-%macro bplotstats(dsn, var, classvar);
-proc means data = &dsn maxdec = 2;
-    class &classvar;
-    var &var;
-run;
-
-proc sgplot data = &dsn;
-    vbox &var / category = &classvar;
-run;
-%mend;
-
-%bplotstats(orion.customer_dim, Customer_Age, Customer_Group);
 ```
 
 ------------------------
@@ -1037,7 +1015,7 @@ Example:
 You can have a mixture of positional and keyword parameters. 
 **Positional parameters must appear first!**
 
-## Setting up macro variables outside a macro
+**Setting up macro variables outside a macro**
 
 ```sas
 %let var = employee_id;
@@ -1047,9 +1025,9 @@ You can have a mixture of positional and keyword parameters.
         by &var;
     run;
 %mend;
+```
 
-```
-```
+```sas
 %macro sortid2(dsn, outdsn = randsort);
     proc sort data = &dsn out = &outdsn;
         by employee_id;
@@ -1062,7 +1040,8 @@ You can have a mixture of positional and keyword parameters.
 
 *This allows us to use the macro variable in other instances;
 ```
-```
+
+```sas
 proc print data = order_item;
     var _ALL_;
     title "Sorted by &var";
@@ -1124,7 +1103,7 @@ ods pdf close;
 
 ```
 If we want no title for the procedures:
-```
+```sas
 ods noproctitle;     
 
 ods pdf file="C:\Users\bmd12s\file.pdf";
@@ -1137,10 +1116,16 @@ run;
 ods pdf close;
 ```
 
-``ods pdf file="file.pdf" STYLE=monochromeprinter;`` will use a nice style for the pace.
+```sas
+ods pdf file="file.pdf" STYLE=monochromeprinter;
+``` 
+will use a nice style for the pace.
 
-``ods pdf file="file.pdf" style = monochromeprinter;
-title1 height=12PT j=LEFT f=ARIAL "Sending to PDF";`` will left-justify.
+```sas
+ods pdf file="file.pdf" style = monochromeprinter;
+title1 height=12PT j=LEFT f=ARIAL "Sending to PDF";
+``` 
+will left-justify.
 
 
 Another example:
@@ -1179,8 +1164,9 @@ proc sql;
     order by salary desc;
 quit;
 
-```sas
 The queries follow a specific order:
+
+```sas
 proc sql;
     (create table as)
     select
@@ -1314,8 +1300,6 @@ select count(*) as Count
 quit;
 ```
 <img src="resources/images/count.png" width="400">
-
-
 
 ```sas
 proc sql;
