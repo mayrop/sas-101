@@ -536,7 +536,7 @@ Includes format on the variable quantity using the format words.
 
 ## Renaming variables
 ```sas
-    data orion.file;
+data orion.file;
     set orion.file(rename = (newname=oldname));
 run;
 ```
