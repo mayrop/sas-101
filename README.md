@@ -653,8 +653,8 @@ Several options can be specified after setting the tables adding `/`, i.e. (`tab
 
 
 *Common errors:*
-using class in proc freq
-```
+Using class in proc freq
+```sas
 proc freq data = orion.customer;
     class gender;
     table country;
