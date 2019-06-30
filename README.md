@@ -590,13 +590,13 @@ This procedure describes the contents of a dataset and prints the directory of t
 **Syntax:**
 
 ```sas
-    proc contents data = mylib.dataset_example order = varnum;
-    run;
+proc contents data = mylib.dataset_example order = varnum;
+run;
 ```
 
 ```sas
-    proc contents data = mylib.dataset_example out=mydata (keep= name varnum) noprint varnum;
-    run;
+proc contents data = mylib.dataset_example out=mydata (keep= name varnum) noprint varnum;
+run;
 ```
 
 ### Required syntax
