@@ -1163,6 +1163,7 @@ proc sql;
     where employee_gender = 'F'
     order by salary desc;
 quit;
+```
 
 The queries follow a specific order:
 
@@ -1176,6 +1177,7 @@ proc sql;
     having
     order by;
 quit;
+```
 
 ```sas
 proc sql;
@@ -1184,7 +1186,6 @@ proc sql;
     where employee_id ne 99999999
     order by employee_id;
 quit;
-
 ```
 
 ```sas
