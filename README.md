@@ -1218,7 +1218,7 @@ quit;
 
 *GROUP BY calculates variables based on the groups;
 ```
-<img src="resources/images/groupby.png" width="400">
+<img src="resources/images/groupby.png" width="200">
 
 
 
@@ -1726,11 +1726,12 @@ Could also use clodds = Wald
 */
 ```
 
-```
+```sas
 proc logistic data=STAT1.ameshousing3 plots(only)=(effect oddsratio);
-model Bonus(event='1')=Basement_Area / clodds=pl;
+    model Bonus(event='1')=Basement_Area / clodds=pl;
 run;
-*/If the house price is over $175,000, the sales person gets a bonus.  0 = No, 1 = Yes
+/*
+If the house price is over $175,000, the sales person gets a bonus.  0 = No, 1 = Yes
 */
 ```
 
