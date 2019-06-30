@@ -1372,8 +1372,8 @@ Question: Is the population mean house sale different to $135,000?
 *Plots(only) suppresses graphs;
 
 proc ttest data = STAT1.ameshousing3 H0 = 135000 plots(only);
-	var Saleprice;
-	title 'One-Sample t-test. Is the 		population mean different to $135,000?';
+    var Saleprice;
+    title 'One-Sample t-test. Is the 		population mean different to $135,000?';
 run;
 
 ```
@@ -1447,7 +1447,6 @@ proc glm data=libname.datasetName;
     model response=categoricalVariable;
     output out=libname.newName keyword = name;
 run;
-quit;
 ```
 
 Example:
@@ -1458,7 +1457,6 @@ proc glm data=STAT1.ameshousing3;
     title "One-Way ANOVA with Heating Quality as Explanatory";
     output out=STAT1.example predicted = predict cookd = cook;
 run;
-quit;
 ```
 
 Assumption check:
@@ -1472,7 +1470,6 @@ proc glm data=STAT1.ameshousing3 plots=diagnostics;
     class Heating_QC;
     model SalePrice=Heating_QC;
 run;
-quit;
 ```
 <img src="resources/images/diagnostics.png" width="400">
 
@@ -1483,7 +1480,6 @@ proc glm data=STAT1.ameshousing3 plots=diagnostics;
     model SalePrice=Heating_QC;
     means Heating_QC / hovtest=levene;
 run;
-quit;
 
 *hovtest=levene checks the assumption of equal variances;
 ```
@@ -1498,11 +1494,10 @@ When we do not have equal variances:
 *We use Welch’s variance-weighted one-way ANOVA;
 
 proc glm data=STAT1.ameshousing3 plots=diagnostics;
-class Heating_QC;
-model SalePrice=Heating_QC;
-means Heating_QC / welch;
+    class Heating_QC;
+    model SalePrice=Heating_QC;
+    means Heating_QC / welch;
 run;
-quit;
 ```
 
 ### Two-or-more-way ANOVA
@@ -1512,17 +1507,16 @@ proc glm data=STAT1.ameshousing3;
     class Heating_QC Masonry_Veneer;
     model SalePrice=Heating_QC Masonry_Veneer Heating_QC*Masonry_Veneer;
 run;
-quit;
 
-
-
-*/ Model explanatory variables have to be on class statement.
+/* 
+Model explanatory variables have to be on class statement.
 Can specify interaction terms as well as main effects with * in the model statement.
 */
 ```
 
 ```sas
-*/ Can specify all combinations of main and interaction terms with | in the model statement
+/*
+Can specify all combinations of main and interaction terms with | in the model statement
 */
 proc glm data=STAT1.ameshousing3;
     class Heating_QC Masonry_Veneer;
@@ -1540,8 +1534,6 @@ proc glm data=STAT1.ameshousing3 plots(only)=(diffplot(center));
     model SalePrice=Heating_QC; 
     lsmeans Heating_QC / pdiff=all adjust = T;
 run; 
-quit;
-
 ```
 
 ```sas
@@ -1550,8 +1542,6 @@ proc glm data=STAT1.ameshousing3;
     model SalePrice=Heating_QC; 
     lsmeans Heating_QC / pdiff=all adjust = tukey;
 run; 
-quit;
-
 ```
 
 ## Correlation
@@ -1598,7 +1588,7 @@ proc corr data=STAT1.AmesHousing3 rank plots(only)=scatter(nvar=all ellipse=none
     title "Correlations and Scatter Plots with SalePrice";
 run;
 
-*/
+/*
 This sets up a macro variable called varNames. The macro variable is called in the proc corr. You therefore get the correlation of SalePrice with EACH of the variables in varNames. We have ranked the correlation coefficients using rank in the options of proc corr. Using nvar=all, we produce scatter plots for all variables in varNames with SalePrice (these plots are not shown in the slides for viewing legibility).
 */
 
@@ -1611,11 +1601,11 @@ This sets up a macro variable called varNames. The macro variable is called in t
 For numerical variables:
 ```sas
 proc reg data=libname.datasetName;
-model response=variables/clb;
+    model response=variables/clb;
 run;
-quit;
 
-*/Model statement specifies regression formula.  If multiple explanatory variables, separate with SPACES.
+/*
+Model statement specifies regression formula.  If multiple explanatory variables, separate with SPACES.
 clb gives confidence intervals.
 */
 ```
@@ -1641,7 +1631,6 @@ proc glm data=stat1.ameshousing3 plots(only)=diagnostics;
     class Central_Air Full_Bathroom;
     model SalePrice = Central_Air Full_Bathroom Garage_Area;
 run;
-quit;
 ```
 <img src="resources/images/procglm.png" width="400">
 Use Type III sum of squares.
@@ -1696,7 +1685,7 @@ proc glmselect data=STAT1.ameshousing3;
     model SalePrice=Age_Sold Lot_Shape_2/selection = forward select=SL slentry=0.05 showpvalues;
 run;
 
-*/
+/*
 slentry means that the variable will be selected if it's p-value is < 0.05.
 Note that the defaults are not 0.05. They are
 0.1 for backwards model selection
@@ -1723,10 +1712,9 @@ We have a categorical response and we wish to model the (log) odds of being in a
 proc logistic data=libname.dataName plots(only)=(effect oddsratio);
     model response(event=‘eventValue’)=variableNames/clodds=pl;
 run;
-*/
+/*
 clodds gives confidence intervals for odds ratios (using profile likelihood)
 Could also use clodds = Wald
-
 */
 ```
 
@@ -1749,7 +1737,7 @@ proc logistic data=libname.dataName plots(only)=(effect oddsratio);
     class categoricalVariable(ref=‘refValue’);
     model response(event=‘eventValue’)=variableNames/clodds=pl;
 run;
-*/To change reference/baseline category.*/
+* To change reference/baseline category.
 ```
 
 ```sas
